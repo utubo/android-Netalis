@@ -2,10 +2,8 @@ package utb.dip.jp.netalis;
 
 import android.graphics.Color;
 
-import java.text.ParseException;
-
 /**
- * Created by utb on 14/03/02.
+ * ユーティリティ
  */
 public class Utils {
 
@@ -65,14 +63,6 @@ public class Utils {
                 }
             }
             return STATUS.OTHER;
-        }
-        public static STATUS atPosition(int p) {
-            for (STATUS s : STATUS.values()) {
-                if (s.position == p) {
-                    return s;
-                }
-            }
-            return STATUS.TODO;
         }
     }
 

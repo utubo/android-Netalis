@@ -140,7 +140,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                 startActivityForResult(intent, EDIT_ACTIVITY);
                 return true;
             }
-            case (R.id.action_conv_json): {
+            case (R.id.action_convert_json): {
                 Intent intent = new Intent(this, ConvertJSONActivity.class );
                 startActivity(intent);
                 return true;

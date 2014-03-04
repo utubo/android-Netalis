@@ -212,7 +212,7 @@ public class DBAdapter {
         for (Object value : values) {
             list.add(String.valueOf(value));
         }
-        return list.toArray(new String[0]);
+        return list.toArray(new String[list.size()]);
     }
 
 }

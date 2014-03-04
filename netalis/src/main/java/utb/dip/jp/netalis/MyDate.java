@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * ユーティリティ
+ * 日時ユーティリティ
  */
 public class MyDate extends Date {
     public static MyDate dummyDate = null;

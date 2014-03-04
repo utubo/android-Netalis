@@ -1,7 +1,6 @@
 package utb.dip.jp.netalis;
 
 import android.util.Log;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
