@@ -47,6 +47,9 @@ public class Task {
 
     public static List<Task> fromJSON(String s) {
         List<Task> list = new ArrayList<Task>();
+        if (Utils.isEmpty(s)) {
+            return list;
+        }
         try {
             JSONObject jobj = new JSONObject(s);
             JSONArray ary = jobj.getJSONArray("tasks");
