@@ -51,7 +51,7 @@ public class ConvertJSONActivity extends ActionBarActivity {
                 alertDlg.setTitle("Import Json");
                 alertDlg.setMessage(
                     "ADD AS NEW (default)\n" +
-                    "OVERWITE (overwites, when _id exists. adds, when id is minus.)"
+                    "OVERWITE (overwites, when _id exists. adds, when _id is minus.)"
                 );
                 alertDlg.setPositiveButton(
                     "ADD AS NEW",
