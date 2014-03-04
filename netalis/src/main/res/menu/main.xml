@@ -28,4 +28,10 @@
         android:icon="@android:drawable/ic_media_next"
         app:showAsAction="ifRoom"/>
 
+    <item android:id="@+id/action_conv_json"
+        android:title="@string/action_conv_json"
+        android:orderInCategory="10"
+        android:icon="@android:drawable/ic_menu_upload"
+        app:showAsAction="never" />
+
 </menu>

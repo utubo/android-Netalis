@@ -48,7 +48,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     /**
      * DB
      */
-    static DBAdapter dbAdapter;
+    public static DBAdapter dbAdapter;
 
     static Map<STATUS, TasksAdapter> taskArrayAdapters = new HashMap<STATUS, TasksAdapter>();
 
@@ -140,6 +140,11 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                 startActivityForResult(intent, EDIT_ACTIVITY);
                 return true;
             }
+            case (R.id.action_conv_json): {
+                Intent intent = new Intent(this, ConvertJSONActivity.class );
+                startActivity(intent);
+                return true;
+            }
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -211,6 +216,20 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 
     }
 
+    public static void refreshTaskAdapters() {
+        for (STATUS status : STATUS.values()) {
+            TasksAdapter tasksAdapter = taskArrayAdapters.get(status);
+            if (tasksAdapter != null) {
+                tasksAdapter.clear();
+                // データ読み込み
+                for (Task task : dbAdapter.selectTasks(status)) {
+                    tasksAdapter.add(task);
+                }
+                tasksAdapter.notifyDataSetChanged();
+            }
+        }
+    }
+
     /**
      * 多数リストの取得
      * @param status ステータス
@@ -228,7 +247,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                     dbAdapter.deleteCanceledTask();
                 }
                 // データ読み込み
-                for (Task task : dbAdapter.getTasks(status)) {
+                for (Task task : dbAdapter.selectTasks(status)) {
                     tasksAdapter.add(task);
                 }
             } finally {

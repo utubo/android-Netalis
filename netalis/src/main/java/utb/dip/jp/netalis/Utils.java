@@ -2,6 +2,8 @@ package utb.dip.jp.netalis;
 
 import android.graphics.Color;
 
+import java.text.ParseException;
+
 /**
  * Created by utb on 14/03/02.
  */
@@ -78,11 +80,25 @@ public class Utils {
         return (value != null) ? value : otherwise;
     }
 
+    public static boolean eq(Object a, Object b) {
+        return (a == null && b == null) || (a != null && a.equals(b));
+    }
+
     public static boolean isEmpty(String s) {
         return (s == null || s.length() == 0 || s.trim().length() == 0);
     }
 
-    public static boolean eq(Object a, Object b) {
-        return (a == null && b == null) || (a != null && a.equals(b));
+    public static String easyEscapeJSON(String s) {
+        return s
+                .replace("\\", "\\\\")
+                .replace("\"", "\\\"");
+    }
+
+    public static long toLong(String s, long defaultLong) {
+        try {
+            return Long.parseLong(s);
+        } catch (Exception e) {
+            return defaultLong;
+        }
     }
 }

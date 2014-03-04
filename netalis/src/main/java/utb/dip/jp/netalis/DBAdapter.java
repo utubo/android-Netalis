@@ -106,21 +106,49 @@ public class DBAdapter {
         );
     }
 
+    String[] TASKS_COLUMNS = new String[]{"_id", "task", "status", "color", "lastupdate"};
+
+    /**
+     * 全タスクリスト取得
+     * @return Taskのリスト
+     */
+    public List<Task> selectAllTasks() {
+        Cursor cursor = db.query(
+                "tasks",
+                TASKS_COLUMNS,
+                null,
+                null,
+                null, // group
+                null, // having
+                "status, lastupdate desc" // oder by
+        );
+        return selectTasks(cursor);
+    }
+
     /**
      * タスクリスト取得
      * @param status ステータス
      * @return Taskのリスト
      */
-    public List<Task> getTasks(STATUS status) {
+    public List<Task> selectTasks(STATUS status) {
         Cursor cursor = db.query(
                 "tasks",
-                new String[]{"_id", "task", "status", "color", "lastupdate"}, // columns
+                TASKS_COLUMNS,
                 "status=?",
                 new String[]{status.dbValue},
                 null, // group
                 null, // having
                 "lastupdate desc" // oder by
         );
+        return selectTasks(cursor);
+    }
+
+    /**
+     * タスクリスト取得
+     * @param cursor DBカーソル
+     * @return Taskのリスト
+     */
+    public List<Task> selectTasks(Cursor cursor) {
         ArrayList<Task> tasks = new ArrayList<Task>();
         try {
             while (cursor.moveToNext()) {
@@ -138,12 +166,15 @@ public class DBAdapter {
         return tasks;
     }
 
+    public boolean saveTask(Task task) {
+        task.lastupdate = MyDate.now().format();
+        return saveTaskWithoutLastupdateTimestamp(task);
+    }
     /**
      * タスクの追加/更新
      * @param task タスク
      */
-    public void saveTask(Task task) {
-        task.lastupdate = MyDate.now().format();
+    public boolean saveTaskWithoutLastupdateTimestamp(Task task) {
         ContentValues values = new ContentValues();
         values.put("task", task.task);
         values.put("status", task.status);
@@ -163,11 +194,13 @@ public class DBAdapter {
             );
             if (cursor.moveToFirst()) {
                 task._id = cursor.getLong(cursor.getColumnIndex("seq"));
+                return true;
             }
         } else {
-            db.update("tasks", values, "_id=?", strings(task._id));
+            return db.update("tasks", values, "_id=?", strings(task._id)) > 0;
         }
-    }
+        return false;
+   }
 
     /**
      * ObjectのリストをStringの配列にして返す。
