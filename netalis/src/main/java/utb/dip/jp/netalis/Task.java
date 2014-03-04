@@ -14,7 +14,9 @@ import java.util.List;
  * Created by utb on 14/03/02.
  */
 public class Task {
-    public long _id = -1;
+    // don't touch this column
+    //public long _id = -1;
+    public String uuid = null;
     public String task = "";
     public int status = Utils.STATUS.TODO.intValue;
     public String color = null;
@@ -22,11 +24,11 @@ public class Task {
     public String toJSON() {
         StringBuilder sb = new StringBuilder();
         sb.append("{\n");
-        sb.append("\t_id:").append(_id).append(",\n");
-        sb.append("\tlastupdate:\"").append(lastupdate).append("\",\n");
-        sb.append("\tstatus:\"").append(Utils.STATUS.valueOf(status).name()).append("\",\n");
-        sb.append("\tcolor:\"").append(color).append("\",\n");
-        sb.append("\ttask:\"").append(Utils.easyEscapeJSON(task)).append("\"\n");
+        sb.append("\tuuid:"      ).append(Utils.ezJsonStr(uuid)).append(",\n");
+        sb.append("\tlastupdate:").append(Utils.ezJsonStr(lastupdate)).append(",\n");
+        sb.append("\tstatus:"    ).append(Utils.ezJsonStr(Utils.STATUS.valueOf(status).name())).append(",\n");
+        sb.append("\tcolor:"     ).append(Utils.ezJsonStr(color)).append(",\n");
+        sb.append("\ttask:"      ).append(Utils.ezJsonStr(task)).append("\n");
         sb.append("}\n");
         return sb.toString();
     }
@@ -50,12 +52,12 @@ public class Task {
             return list;
         }
         try {
-            JSONObject jobj = new JSONObject(s);
-            JSONArray ary = jobj.getJSONArray("tasks");
+            JSONObject jsonObject = new JSONObject(s);
+            JSONArray ary = jsonObject.getJSONArray("tasks");
             for (int i = 0; i < ary.length(); i ++) {
                 JSONObject jTask = ary.getJSONObject(i);
                 Task task = new Task();
-                task._id = Utils.toLong(jTask.getString("_id"), -1);
+                task.uuid = Utils.uuidOrNull(jTask.getString("uuid"));
                 task.color = jTask.getString("color");
                 task.status = Utils.STATUS.valueOf(jTask.getString("status")).intValue;
                 task.lastupdate = jTask.getString("lastupdate");

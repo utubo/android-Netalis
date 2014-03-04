@@ -2,6 +2,7 @@ package utb.dip.jp.netalis;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -15,7 +16,7 @@ import utb.dip.jp.netalis.Utils.STATUS;
 public class DBAdapter {
 
     static final String DATABASE_NAME = "netalis.db";
-    static final int DATABASE_VERSION = 5;
+    static final int DATABASE_VERSION = 6;
 
     protected final Context context;
     protected DatabaseHelper dbHelper;
@@ -41,24 +42,32 @@ public class DBAdapter {
             db.execSQL(
                 "CREATE TABLE tasks (" +
                     "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "uuid TEXT NOT NULL, " +
                     "task TEXT NOT NULL," +
                     "status INTEGER NOT NULL," +
                     "color TEXT, " +
                     "lastupdate TEXT NOT NULL);"
             );
-            // swipe right: move to 'DONE' tab.
-            // swipe left: move to 'CANCEL' tab.
-            // swipe left: move to 'TO-DO' tab.
-            // swipe right: move to 'CANCEL' tab.
-            // 'CANCEL' tab keep tasks only 30 days.
-            // swipe right: remove task.
-            // swipe left: move to 'DONE' tab.
+            db.execSQL("CREATE INDEX idx_tasks ON tasks(uuid);");
         }
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            db.execSQL("DROP TABLE IF EXISTS tasks");
-            onCreate(db);
+            switch (oldVersion) {
+                case 5 : {
+                    db.execSQL("ALTER TABLE tasks ADD COLUMN uuid;");
+                    db.execSQL("CREATE INDEX idx_tasks ON tasks(uuid);");
+                    Cursor cursor = db.rawQuery("SELECT _id from tasks", null);
+                    while(cursor.moveToNext()) {
+                        long id = cursor.getLong(0);
+                        db.execSQL(
+                            "UPDATE tasks SET uuid = ? WHERE _id = ?",
+                            new String[] {UUID.randomUUID().toString(), String.valueOf(id)}
+                        );
+                    }
+                    break;
+                }
+            }
         }
 
     }
@@ -88,7 +97,7 @@ public class DBAdapter {
      * @return 削除件数
      */
     public int deleteTask(Task task) {
-        return db.delete("tasks", "_id=?", strings(task._id));
+        return db.delete("tasks", "uuid=?", strings(task.uuid));
     }
 
     /**
@@ -106,7 +115,7 @@ public class DBAdapter {
         );
     }
 
-    String[] TASKS_COLUMNS = new String[]{"_id", "task", "status", "color", "lastupdate"};
+    String[] TASKS_COLUMNS = new String[]{"uuid", "task", "status", "color", "lastupdate"};
 
     /**
      * 全タスクリスト取得
@@ -153,7 +162,7 @@ public class DBAdapter {
         try {
             while (cursor.moveToNext()) {
                 Task task = new Task();
-                task._id = cursor.getInt(0);
+                task.uuid = cursor.getString(0);
                 task.task = cursor.getString(1);
                 task.status = cursor.getInt(2);
                 task.color = cursor.getString(3);
@@ -166,41 +175,71 @@ public class DBAdapter {
         return tasks;
     }
 
-    public boolean saveTask(Task task) {
+    public RESULT saveTask(Task task) {
         task.lastupdate = MyDate.now().format();
         return saveTaskWithoutLastupdateTimestamp(task);
     }
+
+    /** 実行結果 */
+    public enum RESULT {
+        INSERTED, UPDATED, SKIPPED
+    }
+
     /**
      * タスクの追加/更新
      * @param task タスク
      */
-    public boolean saveTaskWithoutLastupdateTimestamp(Task task) {
+    public RESULT saveTaskWithoutLastupdateTimestamp(Task task) {
         ContentValues values = new ContentValues();
         values.put("task", task.task);
         values.put("status", task.status);
         values.put("color", task.color);
         values.put("lastupdate", task.lastupdate);
-        if (task._id < 0) {
-            db.insertOrThrow("tasks", null, values);
-            Cursor cursor = db.query(
-                    "sqlite_sequence",
-                    new String[]{"seq"},
-                    "name = ?",
-                    new String[]{"tasks"},
-                    null,
-                    null,
-                    null,
-                    null
+
+        ////////////////////
+        // UPDATE
+        if (task.uuid != null) {
+            int updateCount = db.update(
+                "tasks",
+                values,
+                "uuid = ? and lastupdate < ?",
+                strings(task.uuid, task.lastupdate)
             );
-            if (cursor.moveToFirst()) {
-                task._id = cursor.getLong(cursor.getColumnIndex("seq"));
-                return true;
+            if (updateCount != 0) {
+                return RESULT.UPDATED;
             }
-        } else {
-            return db.update("tasks", values, "_id=?", strings(task._id)) > 0;
+            Cursor cursor = db.rawQuery("select count(*) from tasks where uuid = ? ", strings(task.uuid));
+            if (cursor.moveToLast() && cursor.getInt(0) > 0) {
+                return RESULT.SKIPPED;
+            }
         }
-        return false;
-   }
+
+        ////////////////////
+        // INSERT
+        if (task.uuid == null) {
+            task.uuid = UUID.randomUUID().toString();
+        }
+        values.put("uuid", task.uuid);
+        db.insertOrThrow("tasks", null, values);
+        return RESULT.INSERTED;
+    }
+
+    //public long getLastInsertPrimaryKey() {
+    //    Cursor cursor = db.query(
+    //            "sqlite_sequence",
+    //            new String[]{"seq"},
+    //            "name = ?",
+    //            new String[]{"tasks"},
+    //            null,
+    //            null,
+    //            null,
+    //            null
+    //    );
+    //    if (cursor.moveToFirst()) {
+    //        return cursor.getLong(cursor.getColumnIndex("seq"));
+    //    }
+    //    return 0;
+    //}
 
     /**
      * ObjectのリストをStringの配列にして返す。

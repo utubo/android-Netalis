@@ -269,7 +269,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                 Task newTask = TasksAdapter.toTask(intent);
                 Task task;
                 TasksAdapter a = getTasksAdapter(STATUS.valueOf(newTask.status), this);
-                if (newTask._id < 0) {
+                if (newTask.uuid == null) {
                     if (Utils.isEmpty(newTask.task)) {
                         return;
                     }
@@ -277,7 +277,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                     task = newTask;
                     task.status = STATUS.TODO.intValue;
                 } else {
-                    task = a.find(newTask._id);
+                    task = a.find(newTask.uuid);
                     // 更新なし
                     if (Utils.eq(newTask.task, task.task) && Utils.eq(newTask.color, task.color)) {
                         return;

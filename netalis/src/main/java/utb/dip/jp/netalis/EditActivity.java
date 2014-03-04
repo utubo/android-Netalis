@@ -25,7 +25,7 @@ public class EditActivity extends ActionBarActivity {
         editText.setText(task.task);
         setupTaskColor(task.color);
 
-        if (task._id < 0) {
+        if (task.uuid == null) {
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         }
     }

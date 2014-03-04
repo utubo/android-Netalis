@@ -11,7 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 /**
- * Created by utb on 14/03/02.
+ * タスクリストと画面をつなげるアダプター
  */
 public class TasksAdapter extends ArrayAdapter<Task> {
 
@@ -43,11 +43,14 @@ public class TasksAdapter extends ArrayAdapter<Task> {
         return view;
     }
 
-    public Task find(long id) {
+    public Task find(String uuid) {
+        if (Utils.isEmpty(uuid)) {
+            return null;
+        }
         int count = getCount();
         for (int i = 0; i < count; i ++) {
             Task task = getItem(i);
-            if (task._id == id) {
+            if (uuid.equals(task.uuid)) {
                 return task;
             }
         }
@@ -55,7 +58,7 @@ public class TasksAdapter extends ArrayAdapter<Task> {
     }
 
     public static void putExtra(Intent intent, Task task) {
-        intent.putExtra("_id", task._id);
+        intent.putExtra("uuid", task.uuid);
         intent.putExtra("task", task.task);
         intent.putExtra("status", task.status);
         intent.putExtra("color", task.color);
@@ -63,7 +66,7 @@ public class TasksAdapter extends ArrayAdapter<Task> {
 
     public static Task toTask(Intent intent) {
         Task task = new Task();
-        task._id = intent.getLongExtra("_id", -1);
+        task.uuid = intent.getStringExtra("uuid");
         task.task = intent.getStringExtra("task");
         task.status = intent.getIntExtra("status", Utils.STATUS.TODO.intValue);
         task.color = intent.getStringExtra("color");
@@ -71,5 +74,3 @@ public class TasksAdapter extends ArrayAdapter<Task> {
     }
 
 }
-
-

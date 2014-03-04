@@ -48,26 +48,14 @@ public class ConvertJSONActivity extends ActionBarActivity {
             }
             case (R.id.action_import) : {
                 AlertDialog.Builder alertDlg = new AlertDialog.Builder(this);
-                alertDlg.setTitle("Import Json");
-                alertDlg.setMessage(
-                    "ADD AS NEW (default)\n" +
-                    "OVERWITE (overwites, when _id exists. adds, when _id is minus.)"
-                );
+                alertDlg.setTitle("");
+                alertDlg.setMessage("import ?");
                 alertDlg.setPositiveButton(
-                    "ADD AS NEW",
+                    "OK",
                     new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            importJson(true);
-                        }
-                    }
-                );
-                alertDlg.setNeutralButton(
-                    "OVERWITE",
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            importJson(false);
+                            importJson();
                         }
                     }
                 );
@@ -86,7 +74,10 @@ public class ConvertJSONActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    protected void importJson(boolean asNew) {
+    /**
+     * JSONからインポートする。
+     */
+    protected void importJson() {
         EditText jsonEditText = (EditText) findViewById(R.id.json_editText);
         try {
             List<Task> list = Task.fromJSON(jsonEditText.getText().toString());
@@ -96,18 +87,15 @@ public class ConvertJSONActivity extends ActionBarActivity {
                 int updateCount = 0;
                 int skipCount = 0;
                 for (Task task : list) {
-                    if (asNew) {
-                        task._id = -1;
-                    }
-                    boolean isNewTask = task._id < 0;
-                    if (MainActivity.dbAdapter.saveTaskWithoutLastupdateTimestamp(task)) {
-                        if (isNewTask) {
+                    switch (MainActivity.dbAdapter.saveTaskWithoutLastupdateTimestamp(task)) {
+                        case INSERTED:
                             addCount ++;
-                        } else {
+                            break;
+                        case UPDATED:
                             updateCount ++;
-                        }
-                    } else {
-                        skipCount ++;
+                            break;
+                        default:
+                            skipCount ++;
                     }
                 }
                 jsonEditText.setText(MessageFormat.format(
