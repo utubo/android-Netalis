@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.text.method.ScrollingMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -52,11 +51,20 @@ public class ConvertJSONActivity extends ActionBarActivity {
                 alertDlg.setTitle("");
                 alertDlg.setMessage("import ?");
                 alertDlg.setPositiveButton(
-                    "OK",
+                    "ADD AS NEW",
                     new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            importJson();
+                            importJson(true);
+                        }
+                    }
+                );
+                alertDlg.setPositiveButton(
+                    "UPDATE SAME _ID",
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            importJson(false);
                         }
                     }
                 );
@@ -75,7 +83,7 @@ public class ConvertJSONActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    protected void importJson() {
+    protected void importJson(boolean asNew) {
         EditText jsonEditText = (EditText) findViewById(R.id.json_editText);
         try {
             List<Task> list = Task.fromJSON(jsonEditText.getText().toString());
@@ -85,6 +93,9 @@ public class ConvertJSONActivity extends ActionBarActivity {
                 int updateCount = 0;
                 int skipCount = 0;
                 for (Task task : list) {
+                    if (asNew) {
+                        task._id = -1;
+                    }
                     boolean isNewTask = task._id < 0;
                     if (MainActivity.dbAdapter.saveTaskWithoutLastupdateTimestamp(task)) {
                         if (isNewTask) {
@@ -98,8 +109,8 @@ public class ConvertJSONActivity extends ActionBarActivity {
                 }
                 jsonEditText.setText(MessageFormat.format(
                         "{0} tasks added.\n" +
-                                "{1} tasks updated.\n" +
-                                "{2} tasks skipped.\n",
+                        "{1} tasks updated.\n" +
+                        "{2} tasks skipped.\n",
                         addCount, updateCount, skipCount
                 ));
                 MainActivity.refreshTaskAdapters();
