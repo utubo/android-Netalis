@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Netalis.iml" filepath="$PROJECT_DIR$/Netalis.iml" />
+      <module fileurl="file://$PROJECT_DIR$/netalis/netalis.iml" filepath="$PROJECT_DIR$/netalis/netalis.iml" />
+    </modules>
+  </component>
+</project>
+

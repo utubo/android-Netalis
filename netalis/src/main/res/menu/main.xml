@@ -1,0 +1,31 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="utb.dip.jp.netalis.MainActivity" >
+
+    <!--
+    <item android:id="@+id/action_settings"
+        android:title="@string/action_settings"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+    -->
+
+    <item android:id="@+id/action_nav_back"
+        android:title="@string/action_nav_back"
+        android:orderInCategory="1"
+        android:icon="@android:drawable/ic_media_previous"
+        app:showAsAction="ifRoom" />
+
+    <item android:id="@+id/action_task_add"
+        android:title="@string/action_task_add"
+        android:orderInCategory="2"
+        android:icon="@android:drawable/ic_menu_add"
+        app:showAsAction="ifRoom" />
+
+    <item android:id="@+id/action_nav_forward"
+        android:title="@string/action_nav_forward"
+        android:orderInCategory="3"
+        android:icon="@android:drawable/ic_media_next"
+        app:showAsAction="ifRoom"/>
+
+</menu>
