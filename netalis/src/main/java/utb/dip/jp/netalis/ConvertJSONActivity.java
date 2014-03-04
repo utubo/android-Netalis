@@ -48,8 +48,11 @@ public class ConvertJSONActivity extends ActionBarActivity {
             }
             case (R.id.action_import) : {
                 AlertDialog.Builder alertDlg = new AlertDialog.Builder(this);
-                alertDlg.setTitle("");
-                alertDlg.setMessage("import ?");
+                alertDlg.setTitle("Import Json");
+                alertDlg.setMessage(
+                    "ADD AS NEW (default)\n" +
+                    "OVERWITE (overwites, when _id exists. adds, when id is minus.)"
+                );
                 alertDlg.setPositiveButton(
                     "ADD AS NEW",
                     new DialogInterface.OnClickListener() {
@@ -59,8 +62,8 @@ public class ConvertJSONActivity extends ActionBarActivity {
                         }
                     }
                 );
-                alertDlg.setPositiveButton(
-                    "UPDATE SAME _ID",
+                alertDlg.setNeutralButton(
+                    "OVERWITE",
                     new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
