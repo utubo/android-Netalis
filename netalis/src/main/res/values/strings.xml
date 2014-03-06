@@ -12,6 +12,7 @@
     <string name="action_import">Import</string>
     <string name="action_export">Export</string>
     <string name="action_task_add">Add</string>
+    <string name="action_task_random_select">Select at random</string>
     <string name="action_nav_back">Back</string>
     <string name="action_nav_forward">Forward</string>
 

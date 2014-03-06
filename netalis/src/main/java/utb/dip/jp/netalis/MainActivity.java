@@ -6,9 +6,12 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -30,6 +33,19 @@ import utb.dip.jp.netalis.Utils.STATUS;
 
 public class MainActivity extends ActionBarActivity implements ActionBar.TabListener {
 
+    /////////////////////////////////////////////
+    // static members
+    static ListView todoListView = null;
+
+    /** DB */
+    public static DBAdapter dbAdapter;
+
+    static Map<STATUS, TasksAdapter> taskArrayAdapters = new HashMap<STATUS, TasksAdapter>();
+
+    static final int EDIT_ACTIVITY = 10001;
+
+    /////////////////////////////////////////////
+    // instance members
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -45,13 +61,10 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
      */
     ViewPager mViewPager;
 
-    /**
-     * DB
-     */
-    public static DBAdapter dbAdapter;
+    boolean isShowSelectAtRandomToast = true;
 
-    static Map<STATUS, TasksAdapter> taskArrayAdapters = new HashMap<STATUS, TasksAdapter>();
-
+    /////////////////////////////////////////////
+    // methods
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,6 +118,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         return true;
     }
 
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -116,19 +130,15 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         //    return true;
         //}
         switch (id) {
-            case (R.id.action_nav_back): {
+            case R.id.action_nav_back :
+            case R.id.action_nav_forward : {
+                int d = (id == R.id.action_nav_back) ? -1 : 1;
                 int count = mSectionsPagerAdapter.getCount();
-                int p = (mViewPager.getCurrentItem() - 1 + count) % count;
+                int p = (mViewPager.getCurrentItem() + d + count) % count;
                 mViewPager.setCurrentItem(p, true);
                 return true;
             }
-            case (R.id.action_nav_forward): {
-                int count = mSectionsPagerAdapter.getCount();
-                int p = (mViewPager.getCurrentItem() + 1) % count;
-                mViewPager.setCurrentItem(p, true);
-                return true;
-            }
-            case (R.id.action_task_add): {
+            case R.id.action_task_add : {
                 // select TO-DO tab
                 if (mViewPager.getCurrentItem() != STATUS.TODO.position) {
                     mViewPager.setCurrentItem(STATUS.TODO.position, true);
@@ -140,7 +150,34 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                 startActivityForResult(intent, EDIT_ACTIVITY);
                 return true;
             }
-            case (R.id.action_convert_json): {
+            case R.id.action_task_random_select : {
+                mViewPager.setCurrentItem(STATUS.TODO.position, true);
+                if (todoListView != null) {
+                    if (isShowSelectAtRandomToast) {
+                        isShowSelectAtRandomToast = false;
+                        Toast.makeText(
+                            this,
+                            R.string.action_task_random_select,
+                            Toast.LENGTH_SHORT
+                        ).show();
+                    }
+                    final int i = Utils.rnd.nextInt(todoListView.getAdapter().getCount());
+                    todoListView.setSelection(i);
+                    todoListView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            View v = todoListView.getChildAt(i - todoListView.getFirstVisiblePosition());
+                            if (v != null) {
+                                ObjectAnimator oa = ObjectAnimator.ofFloat(v, "alpha", 1f, 0f, 1f, 0f, 1f);
+                                oa.setDuration(1500);
+                                oa.start();
+                            }
+                        }
+                    });
+                }
+                return true;
+            }
+            case R.id.action_convert_json : {
                 Intent intent = new Intent(this, ConvertJSONActivity.class );
                 startActivity(intent);
                 return true;
@@ -258,8 +295,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         return taskArrayAdapters.get(status);
     }
 
-    static final int EDIT_ACTIVITY = 10001;
-
     public void onActivityResult( int requestCode, int resultCode, Intent intent ) {
         // startActivityForResult()の際に指定した識別コードとの比較
         if( requestCode == EDIT_ACTIVITY ){
@@ -344,6 +379,9 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                     getActivity().startActivityForResult(intent, EDIT_ACTIVITY);
                 }
             });
+            if (status == STATUS.TODO) {
+                MainActivity.todoListView = listView;
+            }
             return rootView;
         }
 

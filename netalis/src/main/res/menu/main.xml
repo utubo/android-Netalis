@@ -18,19 +18,25 @@
 
     <item android:id="@+id/action_task_add"
         android:title="@string/action_task_add"
-        android:orderInCategory="2"
+        android:orderInCategory="11"
         android:icon="@android:drawable/ic_menu_add"
+        app:showAsAction="ifRoom" />
+
+    <item android:id="@+id/action_task_random_select"
+        android:title="@string/action_task_random_select"
+        android:orderInCategory="12"
+        android:icon="@android:drawable/ic_menu_help"
         app:showAsAction="ifRoom" />
 
     <item android:id="@+id/action_nav_forward"
         android:title="@string/action_nav_forward"
-        android:orderInCategory="3"
+        android:orderInCategory="21"
         android:icon="@android:drawable/ic_media_next"
         app:showAsAction="ifRoom"/>
 
     <item android:id="@+id/action_convert_json"
         android:title="@string/action_convert_json"
-        android:orderInCategory="10"
+        android:orderInCategory="100"
         android:icon="@android:drawable/ic_menu_upload"
         app:showAsAction="never" />
 

@@ -2,12 +2,15 @@ package utb.dip.jp.netalis;
 
 import android.graphics.Color;
 
+import java.util.Random;
 import java.util.UUID;
 
 /**
  * ユーティリティ
  */
 public class Utils {
+
+    public static Random rnd = new Random();
 
     public static class Config {
         public static int EXPIRE_DAYS = 30;
