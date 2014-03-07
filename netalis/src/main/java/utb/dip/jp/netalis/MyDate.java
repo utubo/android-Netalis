@@ -9,7 +9,7 @@ import java.util.Date;
 public class MyDate extends Date {
     public static MyDate dummyDate = null;
     public static MyDate now() {
-        return Utils.nvl(dummyDate, new MyDate());
+        return U.nvl(dummyDate, new MyDate());
     }
 
     /** "yyyy/MM/dd HH:mm:ss"でフォーマット */

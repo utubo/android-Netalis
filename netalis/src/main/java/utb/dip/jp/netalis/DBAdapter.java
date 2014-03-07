@@ -11,7 +11,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.widget.Toast;
 
-import utb.dip.jp.netalis.Utils.STATUS;
+import utb.dip.jp.netalis.U.STATUS;
 
 public class DBAdapter {
 
@@ -110,7 +110,7 @@ public class DBAdapter {
                 "and lastupdate < ? ",
                 new String[] {
                     STATUS.CANCEL.dbValue,
-                    MyDate.now().addDays(- Utils.Config.EXPIRE_DAYS).format()
+                    MyDate.now().addDays(- U.Config.EXPIRE_DAYS).format()
                 }
         );
     }

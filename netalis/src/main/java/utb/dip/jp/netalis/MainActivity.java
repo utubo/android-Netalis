@@ -6,7 +6,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -29,13 +28,13 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import utb.dip.jp.netalis.Utils.STATUS;
+import utb.dip.jp.netalis.U.STATUS;
 
 public class MainActivity extends ActionBarActivity implements ActionBar.TabListener {
 
     /////////////////////////////////////////////
     // static members
-    static ListView todoListView = null;
+    static MyListView todoListView = null;
 
     /** DB */
     public static DBAdapter dbAdapter;
@@ -153,6 +152,10 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
             case R.id.action_task_random_select : {
                 mViewPager.setCurrentItem(STATUS.TODO.position, true);
                 if (todoListView != null) {
+                    int count = todoListView.getAdapter().getCount();
+                    if (count < 1) {
+                        return true;
+                    }
                     if (isShowSelectAtRandomToast) {
                         isShowSelectAtRandomToast = false;
                         Toast.makeText(
@@ -161,19 +164,9 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                             Toast.LENGTH_SHORT
                         ).show();
                     }
-                    final int i = Utils.rnd.nextInt(todoListView.getAdapter().getCount());
-                    todoListView.setSelection(i);
-                    todoListView.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            View v = todoListView.getChildAt(i - todoListView.getFirstVisiblePosition());
-                            if (v != null) {
-                                ObjectAnimator oa = ObjectAnimator.ofFloat(v, "alpha", 1f, 0f, 1f, 0f, 1f);
-                                oa.setDuration(1500);
-                                oa.start();
-                            }
-                        }
-                    });
+                    final int i = U.rnd.nextInt(count);
+                    todoListView.setSelectionCenter(i);
+                    todoListView.blink(i);
                 }
                 return true;
             }
@@ -305,7 +298,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                 Task task;
                 TasksAdapter a = getTasksAdapter(STATUS.valueOf(newTask.status), this);
                 if (newTask.uuid == null) {
-                    if (Utils.isEmpty(newTask.task)) {
+                    if (U.isEmpty(newTask.task)) {
                         return;
                     }
                     // 新規追加
@@ -314,7 +307,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                 } else {
                     task = a.find(newTask.uuid);
                     // 更新なし
-                    if (Utils.eq(newTask.task, task.task) && Utils.eq(newTask.color, task.color)) {
+                    if (U.eq(newTask.task, task.task) && U.eq(newTask.color, task.color)) {
                         return;
                     }
                     a.remove(task);
@@ -363,7 +356,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
             STATUS status = STATUS.valueOf(getArguments().getInt(ARG_STATUS));
             // リスト
             final TasksAdapter tasksAdapter = getTasksAdapter(status, this.getActivity());
-            ListView listView = (ListView) rootView.findViewById(R.id.listView);
+            MyListView listView = (MyListView) rootView.findViewById(R.id.listView);
             listView.setAdapter(tasksAdapter);
             SwipeDismissListViewTouchListener touchListener = new SwipeDismissListViewTouchListener(
                 listView,

@@ -8,7 +8,7 @@ import java.util.UUID;
 /**
  * ユーティリティ
  */
-public class Utils {
+public class U {
 
     public static Random rnd = new Random();
 
