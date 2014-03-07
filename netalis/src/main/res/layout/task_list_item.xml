@@ -3,6 +3,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/task_list_item_container"
     android:orientation="horizontal"
+    android:background="#ccc"
     android:layout_width="fill_parent"
     android:layout_height="match_parent">
     <SurfaceView
@@ -20,6 +21,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:id="@+id/title_textView"
+            android:textColor="#000"
             android:singleLine="true" />
 
         <TextView
@@ -27,6 +29,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:id="@+id/sub_textView"
+            android:textColor="#333"
             android:singleLine="true" />
     </LinearLayout>
 </LinearLayout>
