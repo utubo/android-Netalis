@@ -1,9 +1,7 @@
 package utb.dip.jp.netalis;
 
 import android.animation.ObjectAnimator;
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ListView;
@@ -30,7 +28,6 @@ public class MyListView extends ListView {
      * 画面の中心に表示するようにスクロールする。
      * @param position 表示対象
      */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void setSelectionCenter(int position) {
         if (position < 0 || getAdapter().getCount() < position) {
             return;
@@ -45,7 +42,6 @@ public class MyListView extends ListView {
      */
     public void blink(final int position) {
         post(new Runnable() {
-            @TargetApi(Build.VERSION_CODES.HONEYCOMB)
             @Override
             public void run() {
                 View v = getChildAt(position - getFirstVisiblePosition());
