@@ -32,6 +32,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 
     /////////////////////////////////////////////
     // static members
+    static Menu mainMenu = null;
     static MyListView todoListView = null;
 
     /** DB */
@@ -125,6 +126,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+        mainMenu = menu;
         return true;
     }
 
@@ -145,6 +147,15 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                 int count = mSectionsPagerAdapter.getCount();
                 int p = (mViewPager.getCurrentItem() + d + count) % count;
                 mViewPager.setCurrentItem(p, true);
+                return true;
+            }
+            case R.id.action_task_undo : {
+                Toast.makeText(
+                        this,
+                        R.string.action_task_undo,
+                        Toast.LENGTH_SHORT
+                ).show();
+                undo();
                 return true;
             }
             case R.id.action_task_add : {
@@ -256,6 +267,9 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 
     }
 
+    /**
+     * リスト再読み込み
+     */
     public static void refreshTaskAdapters() {
         for (STATUS status : STATUS.values()) {
             TasksAdapter tasksAdapter = taskArrayAdapters.get(status);
@@ -298,6 +312,39 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         return taskArrayAdapters.get(status);
     }
 
+    static Task undoTask = null;
+
+    public static void setUndoTask(Task task) {
+        undoTask = task == null ? null : task.clone();
+        if (mainMenu != null)
+            mainMenu.findItem(R.id.action_task_undo).setEnabled(task != null);
+    }
+
+    public void undo() {
+        if (undoTask == null) {
+            return;
+        }
+        dbAdapter.open();
+        try {
+            Task nowTask = dbAdapter.selectTask(undoTask.uuid);
+            dbAdapter.saveTask(
+                undoTask,
+                DBAdapter.QUERY_OPTION.WITHOUT_UPDATE_LASTUPDATE,
+                DBAdapter.QUERY_OPTION.FORCE_UPDATE
+            );
+            setUndoTask(nowTask);
+            refreshTaskAdapters();
+        } finally {
+            dbAdapter.close();
+        }
+    }
+
+    /**
+     * 他画面からの復帰処理
+     * @param requestCode 要求画面
+     * @param resultCode 結果
+     * @param intent インテント
+     */
     public void onActivityResult( int requestCode, int resultCode, Intent intent ) {
         // startActivityForResult()の際に指定した識別コードとの比較
         if( requestCode == EDIT_ACTIVITY ){
@@ -312,6 +359,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                         return;
                     }
                     // 新規追加
+                    setUndoTask(null);
                     task = newTask;
                     task.status = STATUS.TODO.intValue;
                 } else {
@@ -320,6 +368,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                     if (U.eq(newTask.task, task.task) && U.eq(newTask.color, task.color)) {
                         return;
                     }
+                    setUndoTask(task);
                     a.remove(task);
                 }
                 task.task = newTask.task;
@@ -436,6 +485,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                 changed.add(tasksAdapter);
                 for (int position : reverseSortedPositions) {
                     Task task = tasksAdapter.getItem(position);
+                    setUndoTask(task);
                     task.status += dismissRight ? 1 : -1;
                     if (task.status == STATUS.TODO.intValue - 1) {
                         task.status = STATUS.CANCEL.intValue;

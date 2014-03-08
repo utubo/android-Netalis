@@ -13,7 +13,7 @@ import java.util.List;
  * 日付関連ユーティリティ
  * Created by utb on 14/03/02.
  */
-public class Task {
+public class Task implements Cloneable {
     // don't touch this column
     //public long _id = -1;
     public String uuid = null;
@@ -21,6 +21,15 @@ public class Task {
     public int status = U.STATUS.TODO.intValue;
     public String color = null;
     public String lastupdate = null;
+
+    public Task clone() {
+        try {
+            return (Task) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public String toJSON() {
         StringBuilder sb = new StringBuilder();
         sb.append("{\n");

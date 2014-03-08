@@ -154,6 +154,25 @@ public class DBAdapter {
 
     /**
      * タスクリスト取得
+     * @param uuid UUID
+     * @return Taskのリスト
+     */
+    public Task selectTask(String uuid) {
+        Cursor cursor = db.query(
+                "tasks",
+                TASKS_COLUMNS,
+                "uuid=?",
+                new String[]{uuid},
+                null, // group
+                null, // having
+                null // oder by
+        );
+        List<Task> list = selectTasks(cursor);
+        return list.size() == 0 ? null : list.get(0);
+    }
+
+    /**
+     * タスクリスト取得
      * @param cursor DBカーソル
      * @return Taskのリスト
      */
@@ -175,21 +194,24 @@ public class DBAdapter {
         return tasks;
     }
 
-    public RESULT saveTask(Task task) {
-        task.lastupdate = MyDate.now().format();
-        return saveTaskWithoutLastupdateTimestamp(task);
-    }
-
     /** 実行結果 */
     public enum RESULT {
         INSERTED, UPDATED, SKIPPED
     }
 
+    public enum QUERY_OPTION {
+        FORCE_UPDATE,
+        WITHOUT_UPDATE_LASTUPDATE
+    }
     /**
      * タスクの追加/更新
      * @param task タスク
+     * @param
      */
-    public RESULT saveTaskWithoutLastupdateTimestamp(Task task) {
+    public RESULT saveTask(Task task, QUERY_OPTION... options) {
+        if (U.indexOf(QUERY_OPTION.WITHOUT_UPDATE_LASTUPDATE, options) < 0) {
+            task.lastupdate = MyDate.now().format();
+        }
         ContentValues values = new ContentValues();
         values.put("task", task.task);
         values.put("status", task.status);
@@ -199,12 +221,16 @@ public class DBAdapter {
         ////////////////////
         // UPDATE
         if (task.uuid != null) {
-            int updateCount = db.update(
-                "tasks",
-                values,
-                "uuid = ? and lastupdate < ?",
-                strings(task.uuid, task.lastupdate)
-            );
+            String where;
+            String[] params;
+            if (U.indexOf(QUERY_OPTION.FORCE_UPDATE, options) < 0) {
+                where = "uuid = ? and lastupdate < ?";
+                params = strings(task.uuid, task.lastupdate);
+            } else {
+                where = "uuid = ?";
+                params = strings(task.uuid);
+            }
+            int updateCount = db.update("tasks", values, where, params);
             if (updateCount != 0) {
                 return RESULT.UPDATED;
             }

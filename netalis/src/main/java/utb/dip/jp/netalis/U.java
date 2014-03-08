@@ -137,4 +137,16 @@ public class U {
             return null;
         }
     }
+
+    public static <T> int indexOf(T item, T[] array) {
+        if (array != null) {
+            for (int i = 0; i < array.length; i++) {
+                if (eq(item, array[i])) {
+                    return i;
+                }
+
+            }
+        }
+        return -1;
+    }
 }

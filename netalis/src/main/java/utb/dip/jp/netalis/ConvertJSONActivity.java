@@ -49,7 +49,7 @@ public class ConvertJSONActivity extends ActionBarActivity {
             case (R.id.action_import) : {
                 AlertDialog.Builder alertDlg = new AlertDialog.Builder(this);
                 alertDlg.setTitle("");
-                alertDlg.setMessage("import ?");
+                alertDlg.setMessage("import ? (CAN'T UNDO THIS !)");
                 alertDlg.setPositiveButton(
                     "OK",
                     new DialogInterface.OnClickListener() {
@@ -87,7 +87,7 @@ public class ConvertJSONActivity extends ActionBarActivity {
                 int updateCount = 0;
                 int skipCount = 0;
                 for (Task task : list) {
-                    switch (MainActivity.dbAdapter.saveTaskWithoutLastupdateTimestamp(task)) {
+                    switch (MainActivity.dbAdapter.saveTask(task, DBAdapter.QUERY_OPTION.WITHOUT_UPDATE_LASTUPDATE)) {
                         case INSERTED:
                             addCount ++;
                             break;
