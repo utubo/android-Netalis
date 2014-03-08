@@ -67,9 +67,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Set up the action bar.
         final ActionBar actionBar = getSupportActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
@@ -89,18 +87,33 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
             }
         });
 
+        // Set up the action bar.
+        /*
         // For each of the sections in the app, add a tab to the action bar.
         for (int i = 0; i < mSectionsPagerAdapter.getCount(); i++) {
-            // Create a tab with text corresponding to the page title defined by
-            // the adapter. Also specify this Activity object, which implements
-            // the TabListener interface, as the callback (listener) for when
-            // this tab is selected.
             actionBar.addTab(
                     actionBar.newTab()
                             .setText(mSectionsPagerAdapter.getPageTitle(i))
                             .setIcon(mSectionsPagerAdapter.getIcon(i))
                             .setTabListener(this));
         }
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        */
+        IconTextAdapter ad = new IconTextAdapter(this);
+        for (int i = 0; i < mSectionsPagerAdapter.getCount(); i++) {
+            ad.add(mSectionsPagerAdapter.getPageTitle(i), mSectionsPagerAdapter.getIcon(i));
+        }
+        actionBar.setListNavigationCallbacks(ad,
+            new ActionBar.OnNavigationListener() {
+                @Override
+                public boolean onNavigationItemSelected(int i, long l) {
+                    return false;
+                }
+            }
+        );
+        // アプリタイトルを非表示に設定
+        actionBar.setDisplayOptions(0, ActionBar.DISPLAY_SHOW_TITLE);
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 
         // App
         dbAdapter = new DBAdapter(this);
