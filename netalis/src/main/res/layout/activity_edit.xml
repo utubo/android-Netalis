@@ -21,6 +21,8 @@
             android:inputType="textMultiLine"
             android:ems="10"
             android:id="@+id/editText"
+            android:textColor="#000"
+            android:background="#ccc"
             android:text="New Task"
             android:gravity="top" />
 
