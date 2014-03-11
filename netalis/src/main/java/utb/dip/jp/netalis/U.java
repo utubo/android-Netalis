@@ -1,7 +1,6 @@
 package utb.dip.jp.netalis;
 
 import android.graphics.Color;
-import android.util.Log;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -64,18 +63,18 @@ public class U {
     }
 
     /** デフォルトタスクの色 */
-    public static TaskColor[] taskColors = new TaskColor[] {
-        taskColor("#cccccc"),
-        taskColor("#ff8888"),
-        taskColor("#ff6666"),
-        taskColor("#ff9966"),
-        taskColor("#ffcc66"),
-        taskColor("#66aa66"),
-        taskColor("#66aaff"),
-        taskColor("#6666ff"),
-        taskColor("#aa66ff"),
-        taskColor("#333333"),
-    };
+    static {
+        taskColor("#cccccc");
+        taskColor("#ff8888");
+        taskColor("#ff6666");
+        taskColor("#ff9966");
+        taskColor("#ffcc66");
+        taskColor("#66aa66");
+        taskColor("#66aaff");
+        taskColor("#6666ff");
+        taskColor("#aa66ff");
+        taskColor("#333333");
+    }
 
     /** STATUS列挙体 */
     public static enum STATUS {
