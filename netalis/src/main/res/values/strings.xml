@@ -4,7 +4,7 @@
     <string name="app_name">Netalis</string>
     <string name="title_section1">TODO</string>
     <string name="title_section2">DONE</string>
-    <string name="title_section3">CANCEL</string>
+    <string name="title_section3">TRASH BOX</string>
     <string name="title_activity_edit">Edit</string>
     <string name="title_activity_convert_json">Convert JSON</string>
     <string name="action_settings">Settings</string>

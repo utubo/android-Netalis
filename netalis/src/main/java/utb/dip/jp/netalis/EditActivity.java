@@ -34,7 +34,10 @@ public class EditActivity extends ActionBarActivity {
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         LinearLayout colorButtons = (LinearLayout) findViewById(R.id.color_buttons_linerLayout);
-        for (U.TaskColor c : U.taskColors) {
+        for (U.TaskColor c : U.taskColorHashMap.values()) {
+            if (c.isParseError) {
+                continue;
+            }
             Button button = new Button(this, null, R.style.ColorButtonStyle);
             button.setWidth(colorButtons.getHeight());
             button.setHeight(colorButtons.getHeight());
@@ -53,7 +56,9 @@ public class EditActivity extends ActionBarActivity {
     public void setupTaskColor(String color) {
         task.color = color;
         EditText editText = (EditText) findViewById(R.id.editText);
-        editText.setBackgroundColor(U.taskColor(color).background);
+        U.TaskColor c = U.taskColor(color);
+        editText.setTextColor(c.textColor);
+        editText.setBackgroundColor(c.taskColor);
     }
 
     @Override

@@ -1,7 +1,10 @@
 package utb.dip.jp.netalis;
 
 import android.graphics.Color;
+import android.util.Log;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
@@ -20,26 +23,31 @@ public class U {
     public static class TaskColor {
         public String colorDBValue;
         public int taskColor;
-        public int background;
-        public TaskColor(String taskColor, String background) {
-            this.colorDBValue = taskColor;
-            this.taskColor = Color.parseColor(taskColor);
-            this.background = Color.parseColor(background);
+        public int textColor;
+        public boolean isParseError = false;
+        public TaskColor(String color) {
+            this.colorDBValue = color;
+            try {
+                this.taskColor = Color.parseColor(color);
+            } catch (Exception e) {
+                isParseError = true;
+                this.taskColor = Color.parseColor("#cccccc");
+            }
+            this.textColor = Color.parseColor(isBrightColor(taskColor) ? "#333333" : "#ffffff");
         }
     }
 
-    /** タスクの色 */
-    public static TaskColor[] taskColors = new TaskColor[] {
-        new TaskColor("#cccccc", "#ffffff"),
-        new TaskColor("#ff6666", "#ffcccc"),
-        new TaskColor("#ff9966", "#ffccaa"),
-        new TaskColor("#ffcc66", "#ffffcc"),
-        new TaskColor("#66aa66", "#aaccaa"),
-        new TaskColor("#66aaff", "#aaccff"),
-        new TaskColor("#6666ff", "#ccccff"),
-        new TaskColor("#aa66ff", "#ccaaff"),
-        new TaskColor("#333333", "#aaaaaa"),
-    };
+    /**
+     * 明るい色ならtrue。
+     * @param color 判定する色
+     * @return 明るい色ならtrue。
+     */
+    private static boolean isBrightColor(int color) {
+        return Color.blue(color) + Color.green(color) + Color.red(color) > 12 * 16 * 3;
+    }
+
+    /** 色のキャッシュ */
+    public static Map<String, TaskColor> taskColorHashMap = new LinkedHashMap<String, TaskColor>();
 
     /**
      * タスクの色を返す。
@@ -47,14 +55,27 @@ public class U {
      * @return TaskColorクラス
      */
     public static TaskColor taskColor(String color) {
-        for (TaskColor c : taskColors) {
-            if (c.colorDBValue.equals(color)) {
-                return c;
-            }
+        TaskColor c = taskColorHashMap.get(color);
+        if (c == null) {
+            c = new TaskColor(color);
+            taskColorHashMap.put(color, c);
         }
-        return taskColors[0];
+        return c;
     }
 
+    /** デフォルトタスクの色 */
+    public static TaskColor[] taskColors = new TaskColor[] {
+        taskColor("#cccccc"),
+        taskColor("#ff8888"),
+        taskColor("#ff6666"),
+        taskColor("#ff9966"),
+        taskColor("#ffcc66"),
+        taskColor("#66aa66"),
+        taskColor("#66aaff"),
+        taskColor("#6666ff"),
+        taskColor("#aa66ff"),
+        taskColor("#333333"),
+    };
 
     /** STATUS列挙体 */
     public static enum STATUS {

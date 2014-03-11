@@ -28,17 +28,21 @@ public class TasksAdapter extends ArrayAdapter<Task> {
         if (view == null) {
             return null;
         }
+        // UI
+        LinearLayout container = (LinearLayout) view.findViewById(R.id.task_list_item_container);
+        TextView titleTextView = (TextView) view.findViewById(R.id.title_textView);
+        TextView subTextView = (TextView) view.findViewById(R.id.sub_textView);
+        // アイテム
         Task task = getItem(position);
         // テキスト
         String[] lines = task.task.split("\n");
-        ((TextView) view.findViewById(R.id.title_textView)).setText(lines[0]);
-        ((TextView) view.findViewById(R.id.sub_textView)).setText(1 < lines.length ? lines[1] : "");
+        titleTextView.setText(lines[0]);
+        subTextView.setText(1 < lines.length ? lines[1] : "");
         // 色
         U.TaskColor c = U.taskColor(task.color);
-        SurfaceView sur = (SurfaceView) view.findViewById(R.id.task_color_surfaceView);
-        sur.setBackgroundColor(c.taskColor);
-        LinearLayout container = (LinearLayout) view.findViewById(R.id.task_list_item_container);
-        container.setBackgroundColor(c.background);
+        container.setBackgroundColor(c.taskColor);
+        titleTextView.setTextColor(c.textColor);
+        subTextView.setTextColor(c.textColor);
 
         return view;
     }

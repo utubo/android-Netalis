@@ -21,8 +21,8 @@
             android:inputType="textMultiLine"
             android:ems="10"
             android:id="@+id/editText"
-            android:textColor="#000"
-            android:background="#ccc"
+            android:textColor="#fff"
+            android:background="#333"
             android:text="New Task"
             android:gravity="top" />
 
@@ -33,7 +33,7 @@
                 android:id="@+id/color_buttons_linerLayout"
                 android:orientation="horizontal"
                 android:layout_width="fill_parent"
-                android:layout_height="32dp">
+                android:layout_height="30dp">
             </LinearLayout>
         </HorizontalScrollView>
     </LinearLayout>
