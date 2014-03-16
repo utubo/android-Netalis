@@ -71,6 +71,7 @@ public class Task implements Cloneable {
                 task.uuid = U.uuidOrNull(jTask.getString("uuid"));
                 task.color = jTask.getString("color");
                 task.status = U.STATUS.valueOf(jTask.getString("status")).intValue;
+                task.priority = jTask.getInt("priority");
                 task.lastupdate = jTask.getString("lastupdate");
                 if (!task.lastupdate.matches("[0-9]{4}/[0-9]{2}/[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}")) {
                     task.lastupdate = MyDate.now().format();
