@@ -38,6 +38,7 @@ public class Task implements Cloneable {
         sb.append("\tlastupdate:").append(U.ezJsonStr(lastupdate)).append(",\n");
         sb.append("\tstatus:"    ).append(U.ezJsonStr(U.STATUS.valueOf(status).name())).append(",\n");
         sb.append("\tcolor:"     ).append(U.ezJsonStr(color)).append(",\n");
+        sb.append("\tpriority:"  ).append(String.valueOf(priority)).append(",\n");
         sb.append("\ttask:"      ).append(U.ezJsonStr(task)).append("\n");
         sb.append("}\n");
         return sb.toString();
