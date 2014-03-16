@@ -351,7 +351,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
             // 返却結果ステータスとの比較
             if( resultCode == RESULT_OK ){
                 // 返却されてきたintentから値を取り出す
-                Task newTask = TasksAdapter.toTask(intent);
+                Task newTask = TasksAdapter.fromExtra(intent);
                 Task task;
                 TasksAdapter a = getTasksAdapter(STATUS.valueOf(newTask.status), this);
                 if (newTask.uuid == null) {
@@ -365,7 +365,10 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                 } else {
                     task = a.find(newTask.uuid);
                     // 更新なし
-                    if (U.eq(newTask.task, task.task) && U.eq(newTask.color, task.color)) {
+                    if (U.eq(newTask.task, task.task) &&
+                        U.eq(newTask.color, task.color) &&
+                        U.eq(newTask.priority, task.priority)
+                    ) {
                         return;
                     }
                     setUndoTask(task);
@@ -374,11 +377,18 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                 task.task = newTask.task;
                 task.status = newTask.status;
                 task.color = newTask.color;
+                task.priority = newTask.priority;
                 task.lastupdate = MyDate.now().format();
                 dbAdapter.open();
                 dbAdapter.saveTask(task);
                 dbAdapter.close();
-                a.insert(task, 0);
+                int i;
+                for (i = 0; i < a.getCount(); i ++) {
+                    if (a.getItem(i).priority <= task.priority) {
+                        break;
+                    }
+                }
+                a.insert(task, i);
                 a.notifyDataSetChanged();
             }
         }

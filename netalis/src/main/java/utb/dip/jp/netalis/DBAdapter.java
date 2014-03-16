@@ -16,7 +16,7 @@ import utb.dip.jp.netalis.U.STATUS;
 public class DBAdapter {
 
     static final String DATABASE_NAME = "netalis.db";
-    static final int DATABASE_VERSION = 6;
+    static final int DATABASE_VERSION = 7;
 
     protected final Context context;
     protected DatabaseHelper dbHelper;
@@ -42,10 +42,11 @@ public class DBAdapter {
             db.execSQL(
                 "CREATE TABLE tasks (" +
                     "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    "uuid TEXT NOT NULL, " +
+                    "uuid TEXT NOT NULL," +
                     "task TEXT NOT NULL," +
                     "status INTEGER NOT NULL," +
-                    "color TEXT, " +
+                    "color TEXT," +
+                    "priority INTEGER NOT NULL DEFAULT 0," +
                     "lastupdate TEXT NOT NULL);"
             );
             db.execSQL("CREATE INDEX idx_tasks ON tasks(uuid);");
@@ -53,20 +54,20 @@ public class DBAdapter {
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            switch (oldVersion) {
-                case 5 : {
-                    db.execSQL("ALTER TABLE tasks ADD COLUMN uuid;");
-                    db.execSQL("CREATE INDEX idx_tasks ON tasks(uuid);");
-                    Cursor cursor = db.rawQuery("SELECT _id from tasks", null);
-                    while(cursor.moveToNext()) {
-                        long id = cursor.getLong(0);
-                        db.execSQL(
-                            "UPDATE tasks SET uuid = ? WHERE _id = ?",
-                            new String[] {UUID.randomUUID().toString(), String.valueOf(id)}
-                        );
-                    }
-                    break;
+            if (oldVersion < 6) {
+                db.execSQL("ALTER TABLE tasks ADD COLUMN uuid;");
+                db.execSQL("CREATE INDEX idx_tasks ON tasks(uuid);");
+                Cursor cursor = db.rawQuery("SELECT _id from tasks", null);
+                while(cursor.moveToNext()) {
+                    long id = cursor.getLong(0);
+                    db.execSQL(
+                        "UPDATE tasks SET uuid = ? WHERE _id = ?",
+                        new String[] {UUID.randomUUID().toString(), String.valueOf(id)}
+                    );
                 }
+            }
+            if (oldVersion < 7) {
+                db.execSQL("ALTER TABLE tasks ADD COLUMN priority INTEGER NOT NULL DEFAULT 0;");
             }
         }
 
@@ -115,7 +116,7 @@ public class DBAdapter {
         );
     }
 
-    String[] TASKS_COLUMNS = new String[]{"uuid", "task", "status", "color", "lastupdate"};
+    String[] TASKS_COLUMNS = new String[]{"uuid", "task", "status", "color", "priority", "lastupdate"};
 
     /**
      * 全タスクリスト取得
@@ -147,7 +148,9 @@ public class DBAdapter {
                 new String[]{status.dbValue},
                 null, // group
                 null, // having
-                "lastupdate desc" // oder by
+                // order by
+                (status == STATUS.TODO ? "priority desc, " : "") +
+                "lastupdate desc"
         );
         return selectTasks(cursor);
     }
@@ -185,7 +188,8 @@ public class DBAdapter {
                 task.task = cursor.getString(1);
                 task.status = cursor.getInt(2);
                 task.color = cursor.getString(3);
-                task.lastupdate = cursor.getString(4);
+                task.priority = cursor.getInt(4);
+                task.lastupdate = cursor.getString(5);
                 tasks.add(task);
             }
         } catch (Exception e) {
@@ -216,6 +220,7 @@ public class DBAdapter {
         values.put("task", task.task);
         values.put("status", task.status);
         values.put("color", task.color);
+        values.put("priority", task.priority);
         values.put("lastupdate", task.lastupdate);
 
         ////////////////////
@@ -249,23 +254,6 @@ public class DBAdapter {
         db.insertOrThrow("tasks", null, values);
         return RESULT.INSERTED;
     }
-
-    //public long getLastInsertPrimaryKey() {
-    //    Cursor cursor = db.query(
-    //            "sqlite_sequence",
-    //            new String[]{"seq"},
-    //            "name = ?",
-    //            new String[]{"tasks"},
-    //            null,
-    //            null,
-    //            null,
-    //            null
-    //    );
-    //    if (cursor.moveToFirst()) {
-    //        return cursor.getLong(cursor.getColumnIndex("seq"));
-    //    }
-    //    return 0;
-    //}
 
     /**
      * ObjectのリストをStringの配列にして返す。

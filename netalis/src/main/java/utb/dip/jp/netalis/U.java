@@ -16,6 +16,7 @@ public class U {
 
     public static class Config {
         public static int EXPIRE_DAYS = 30;
+        public static int PRIORITY_MAX = 5;
     }
 
     /** タスクの色を表す構造体 */

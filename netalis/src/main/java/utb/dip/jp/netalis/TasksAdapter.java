@@ -65,14 +65,16 @@ public class TasksAdapter extends ArrayAdapter<Task> {
         intent.putExtra("task", task.task);
         intent.putExtra("status", task.status);
         intent.putExtra("color", task.color);
+        intent.putExtra("priority", task.priority);
     }
 
-    public static Task toTask(Intent intent) {
+    public static Task fromExtra(Intent intent) {
         Task task = new Task();
         task.uuid = intent.getStringExtra("uuid");
         task.task = intent.getStringExtra("task");
         task.status = intent.getIntExtra("status", U.STATUS.TODO.intValue);
         task.color = intent.getStringExtra("color");
+        task.priority = intent.getIntExtra("priority", 0);
         return task;
     }
 

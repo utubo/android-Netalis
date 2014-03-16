@@ -20,6 +20,7 @@ public class Task implements Cloneable {
     public String task = "";
     public int status = U.STATUS.TODO.intValue;
     public String color = null;
+    public int priority = 0;
     public String lastupdate = null;
 
     public Task clone() {

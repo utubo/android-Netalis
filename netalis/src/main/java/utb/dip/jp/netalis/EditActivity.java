@@ -6,21 +6,28 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class EditActivity extends ActionBarActivity {
 
     private Task task = new Task();
+
+    private List<ImageView> stars = new ArrayList<ImageView>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
         Intent intent = getIntent();
-        task = TasksAdapter.toTask(intent);
+        task = TasksAdapter.fromExtra(intent);
         EditText editText = (EditText) findViewById(R.id.editText);
         editText.setText(task.task);
         setupTaskColor(task.color);
@@ -30,9 +37,36 @@ public class EditActivity extends ActionBarActivity {
         }
     }
 
+    /**
+     * 画面レイアウト計算後のイベント<br/>
+     * ボタンを設置する。
+     * @param hasFocus フォーカス
+     */
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
+
+        // 星ボタン
+        LinearLayout priorityButtons = (LinearLayout) findViewById(R.id.priority_buttons_linerLayout);
+        for (int i = 0; i <= U.Config.PRIORITY_MAX; i ++) {
+            ImageView button = new ImageView(this);
+            button.setLayoutParams(new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT
+            ));
+            final int priority = i;
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    setupPriority(priority);
+                }
+            });
+            button.setImageResource(i == 0 ? android.R.drawable.ic_menu_close_clear_cancel : starId(i));
+            stars.add(button);
+            priorityButtons.addView(button);
+        }
+
+        // 色選択ボタン
         LinearLayout colorButtons = (LinearLayout) findViewById(R.id.color_buttons_linerLayout);
         for (U.TaskColor c : U.taskColorHashMap.values()) {
             if (c.isParseError) {
@@ -53,12 +87,25 @@ public class EditActivity extends ActionBarActivity {
         }
     }
 
+    private int starId(int priority) {
+        return priority <= task.priority ? android.R.drawable.star_on : android.R.drawable.star_off;
+    }
+
+    public void setupPriority(int priority) {
+        task.priority = priority;
+        for (int i = 1; i < stars.size(); i ++) {
+            stars.get(i).setImageResource(starId(i));
+        }
+    }
+
     public void setupTaskColor(String color) {
         task.color = color;
         EditText editText = (EditText) findViewById(R.id.editText);
         U.TaskColor c = U.taskColor(color);
         editText.setTextColor(c.textColor);
         editText.setBackgroundColor(c.taskColor);
+        LinearLayout editLinearLayout = (LinearLayout) findViewById(R.id.edit_linerLayout);
+        editLinearLayout.setBackgroundColor(c.taskColor);
     }
 
     @Override
