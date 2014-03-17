@@ -33,7 +33,7 @@ public class U {
                 isParseError = true;
                 this.taskColor = Color.parseColor("#cccccc");
             }
-            this.textColor = Color.parseColor(isBrightColor(taskColor) ? "#333333" : "#ffffff");
+            this.textColor = Color.parseColor(isBrightColor(taskColor) ? "#555555" : "#ffffff");
         }
     }
 

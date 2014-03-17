@@ -21,6 +21,9 @@ public class EditActivity extends ActionBarActivity {
     private Task task = new Task();
 
     private List<ImageView> stars = new ArrayList<ImageView>();
+    private EditText editText = null;
+    private LinearLayout priorityButtons = null;
+    private LinearLayout colorButtons = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +31,10 @@ public class EditActivity extends ActionBarActivity {
         setContentView(R.layout.activity_edit);
         Intent intent = getIntent();
         task = TasksAdapter.fromExtra(intent);
-        EditText editText = (EditText) findViewById(R.id.editText);
+        editText = (EditText) findViewById(R.id.editText);
+        priorityButtons = (LinearLayout) findViewById(R.id.priority_buttons_linerLayout);
+        colorButtons = (LinearLayout) findViewById(R.id.color_buttons_linerLayout);
+
         editText.setText(task.task);
         setupTaskColor(task.color);
 
@@ -47,7 +53,6 @@ public class EditActivity extends ActionBarActivity {
         super.onWindowFocusChanged(hasFocus);
 
         // 星ボタン
-        LinearLayout priorityButtons = (LinearLayout) findViewById(R.id.priority_buttons_linerLayout);
         for (int i = 0; i <= U.Config.PRIORITY_MAX; i ++) {
             ImageView button = new ImageView(this);
             button.setLayoutParams(new LinearLayout.LayoutParams(
@@ -67,7 +72,6 @@ public class EditActivity extends ActionBarActivity {
         }
 
         // 色選択ボタン
-        LinearLayout colorButtons = (LinearLayout) findViewById(R.id.color_buttons_linerLayout);
         for (U.TaskColor c : U.taskColorHashMap.values()) {
             if (c.isParseError) {
                 continue;
@@ -100,17 +104,14 @@ public class EditActivity extends ActionBarActivity {
 
     public void setupTaskColor(String color) {
         task.color = color;
-        EditText editText = (EditText) findViewById(R.id.editText);
         U.TaskColor c = U.taskColor(color);
         editText.setTextColor(c.textColor);
         editText.setBackgroundColor(c.taskColor);
-        LinearLayout editLinearLayout = (LinearLayout) findViewById(R.id.edit_linerLayout);
-        editLinearLayout.setBackgroundColor(c.taskColor);
+        priorityButtons.setBackgroundColor(c.taskColor);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.edit, menu);
         return true;
@@ -136,8 +137,10 @@ public class EditActivity extends ActionBarActivity {
         Intent intent = new Intent();
 
         // intentへ添え字付で値を保持させる
-        task.task = ((EditText) findViewById(R.id.editText)).getText().toString();
-        TasksAdapter.putExtra(intent, task);
+        if (editText != null) {
+            task.task = editText.getText().toString();
+            TasksAdapter.putExtra(intent, task);
+        }
 
         // 返却したい結果ステータスをセットする
         setResult( RESULT_OK, intent );

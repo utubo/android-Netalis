@@ -10,7 +10,6 @@
 
     <LinearLayout
         android:id="@+id/edit_linerLayout"
-        android:background="#333"
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -23,10 +22,8 @@
             android:inputType="textMultiLine"
             android:ems="10"
             android:id="@+id/editText"
-            android:textColor="#fff"
             android:text="New Task"
             android:gravity="top" />
-
         <LinearLayout
             android:id="@+id/priority_buttons_linerLayout"
             android:orientation="horizontal"

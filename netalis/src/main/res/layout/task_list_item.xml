@@ -4,18 +4,22 @@
     android:id="@+id/task_list_item_container"
     android:orientation="vertical"
     android:background="#ccc"
-    android:padding="2px"
+    android:paddingTop="2dp"
+    android:paddingBottom="2dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
     android:layout_width="fill_parent"
     android:layout_height="match_parent">
     <TextView
+        android:text="Title"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:id="@+id/title_textView"
         android:textColor="#000"
         android:singleLine="true" />
-
     <TextView
+        android:text="SubTitle"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
