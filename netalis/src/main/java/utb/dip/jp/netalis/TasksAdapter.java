@@ -2,6 +2,8 @@ package utb.dip.jp.netalis;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.ShapeDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +41,7 @@ public class TasksAdapter extends ArrayAdapter<Task> {
         subTextView.setText(1 < lines.length ? lines[1] : "");
         // 色
         U.TaskColor c = U.taskColor(task.color);
-        container.setBackgroundColor(c.taskColor);
+        U.applyBackground(container, R.drawable.shape_task, c.taskColor);
         titleTextView.setTextColor(c.textColor);
         subTextView.setTextColor(c.textColor);
 

@@ -25,6 +25,10 @@ public class EditActivity extends ActionBarActivity {
     private LinearLayout priorityButtons = null;
     private LinearLayout colorButtons = null;
 
+    /**
+     * アクティビティ表示
+     * @param savedInstanceState なんだろこれ
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +40,7 @@ public class EditActivity extends ActionBarActivity {
         colorButtons = (LinearLayout) findViewById(R.id.color_buttons_linerLayout);
 
         editText.setText(task.task);
+        editText.setSelection(task.task.length()); // カーソルを末尾に移動
         setupTaskColor(task.color);
 
         if (task.uuid == null) {
@@ -77,9 +82,9 @@ public class EditActivity extends ActionBarActivity {
                 continue;
             }
             Button button = new Button(this, null, R.style.ColorButtonStyle);
+            U.applyBackground(button, R.drawable.shape_circle, c.taskColor);
             button.setWidth(colorButtons.getHeight());
             button.setHeight(colorButtons.getHeight());
-            button.setBackgroundColor(c.taskColor);
             button.setTag(c.colorDBValue);
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -91,10 +96,19 @@ public class EditActivity extends ActionBarActivity {
         }
     }
 
+    /**
+     * 優先度以下の★ボタンのidを取得する。
+     * @param priority 優先度
+     * @return ボタンid
+     */
     private int starId(int priority) {
         return priority <= task.priority ? android.R.drawable.star_on : android.R.drawable.star_off;
     }
 
+    /**
+     * 優先度（★）の設定
+     * @param priority 優先度
+     */
     public void setupPriority(int priority) {
         task.priority = priority;
         for (int i = 1; i < stars.size(); i ++) {
@@ -102,12 +116,15 @@ public class EditActivity extends ActionBarActivity {
         }
     }
 
+    /**
+     * 色設定。TextEditの色も変更する。
+     * @param color 色
+     */
     public void setupTaskColor(String color) {
         task.color = color;
         U.TaskColor c = U.taskColor(color);
         editText.setTextColor(c.textColor);
-        editText.setBackgroundColor(c.taskColor);
-        priorityButtons.setBackgroundColor(c.taskColor);
+        U.applyBackground(editText, R.drawable.shape_task, c.taskColor);
     }
 
     @Override
@@ -131,13 +148,16 @@ public class EditActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * 戻るボタン。変更内容を呼び出し元へ返却してアクティビティを閉じる。
+     */
     @Override
     public void onBackPressed() {
         // intentの作成
         Intent intent = new Intent();
 
         // intentへ添え字付で値を保持させる
-        if (editText != null) {
+        if (editText != null && editText.getText() != null) {
             task.task = editText.getText().toString();
             TasksAdapter.putExtra(intent, task);
         }

@@ -1,6 +1,9 @@
 package utb.dip.jp.netalis;
 
+import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
+import android.view.View;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -169,5 +172,23 @@ public class U {
             }
         }
         return -1;
+    }
+
+    /**
+     * バックグラウンドの色を指定して形をあてがう
+     * @param view 適用するView
+     * @param id 形
+     * @param color 色
+     */
+    public static void applyBackground(View view, int id, int color) {
+        Resources res = view.getResources();
+        if (res == null) {
+            return;
+        }
+        GradientDrawable drawable = (GradientDrawable) res.getDrawable(id);
+        if (drawable != null) {
+            drawable.setColor(color);
+            view.setBackgroundDrawable(drawable);
+        }
     }
 }

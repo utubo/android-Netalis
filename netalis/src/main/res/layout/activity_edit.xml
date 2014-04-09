@@ -23,6 +23,8 @@
             android:ems="10"
             android:id="@+id/editText"
             android:text="New Task"
+            android:background="@drawable/shape_task"
+            android:padding="6dp"
             android:gravity="top" />
         <LinearLayout
             android:id="@+id/priority_buttons_linerLayout"
@@ -32,6 +34,7 @@
             android:layout_height="30dp">
         </LinearLayout>
         <HorizontalScrollView
+            android:layout_gravity="center"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content">
             <LinearLayout
