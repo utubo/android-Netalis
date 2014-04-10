@@ -98,6 +98,25 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
     private View mDownView;
     private boolean mPaused;
 
+    private View guidView = null;
+    private final float GUID_VIEW_ALPHA = Float.parseFloat("0.5");
+    private final long GUID_VIEW_ANIMATION_TIME = 300;
+
+
+    public void setGuidView(View guidView) {
+        this.guidView = guidView;
+        this.guidView.setAlpha(0);
+    }
+
+    public void animateGuidViewAlpha(float f) {
+        if (guidView != null) {
+            guidView.animate()
+                    .alpha(f)
+                    .setDuration(GUID_VIEW_ANIMATION_TIME)
+                    .setListener(null);
+        }
+    }
+
     /**
      * The callback interface used by {@link SwipeDismissListViewTouchListener} to inform its client
      * about a successful dismissal of one or more list item positions.
@@ -218,6 +237,8 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
                     break;
                 }
 
+                animateGuidViewAlpha(0);
+
                 if (mDownView != null && mSwiping) {
                     // cancel
                     mDownView.animate()
@@ -240,6 +261,8 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
                 if (mVelocityTracker == null) {
                     break;
                 }
+
+                animateGuidViewAlpha(0);
 
                 float deltaX = motionEvent.getRawX() - mDownX;
                 mVelocityTracker.addMovement(motionEvent);
@@ -297,6 +320,8 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
                 if (mVelocityTracker == null || mPaused) {
                     break;
                 }
+
+                animateGuidViewAlpha(GUID_VIEW_ALPHA);
 
                 mVelocityTracker.addMovement(motionEvent);
                 float deltaX = motionEvent.getRawX() - mDownX;

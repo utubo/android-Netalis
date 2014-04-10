@@ -2,7 +2,6 @@ package utb.dip.jp.netalis;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -21,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -406,6 +406,9 @@ public class MainActivity extends BaseActivity implements ActionBar.TabListener 
             STATUS status = STATUS.valueOf(getArguments().getInt(ARG_STATUS));
             // インフォ
             ((TextView) rootView.findViewById(R.id.pageInfo)).setText(status.infoId);
+            // ガイド
+            ((ImageView) rootView.findViewById(R.id.guidNextImageView)).setImageResource(status.nextIcon(getActivity()));
+            ((ImageView) rootView.findViewById(R.id.guidPrevImageView)).setImageResource(status.prevIcon(getActivity()));
             // リスト
             final TasksAdapter tasksAdapter = getTasksAdapter(status, this.getActivity());
             MyListView listView = (MyListView) rootView.findViewById(R.id.listView);
@@ -427,6 +430,7 @@ public class MainActivity extends BaseActivity implements ActionBar.TabListener 
             if (status == STATUS.TODO) {
                 MainActivity.todoListView = listView;
             }
+            touchListener.setGuidView(rootView.findViewById(R.id.guidView));
             return rootView;
         }
 

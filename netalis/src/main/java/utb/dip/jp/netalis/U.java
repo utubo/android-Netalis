@@ -119,14 +119,29 @@ public class U {
 
         public int getIcon(Activity a) {
             switch (this) {
-                case TODO:
-                    return a.getResources().getIdentifier("@*android:drawable/ic_menu_home", null, a.getPackageName());
-                case DONE:
-                    return a.getResources().getIdentifier("@*android:drawable/ic_menu_mark", null, a.getPackageName());
-                case CANCEL:
-                    return android.R.drawable.ic_menu_delete;
+                case TODO: return a.getResources().getIdentifier("@*android:drawable/ic_menu_home", null, a.getPackageName());
+                case DONE: return a.getResources().getIdentifier("@*android:drawable/ic_menu_mark", null, a.getPackageName());
+                case CANCEL: return android.R.drawable.ic_menu_delete;
+                default: return 0;
             }
-            return 0;
+        }
+
+        public int nextIcon(Activity a) {
+            switch (this) {
+                case TODO: return DONE.getIcon(a);
+                case DONE: return CANCEL.getIcon(a);
+                case CANCEL: return android.R.drawable.ic_delete;
+                default: return 0;
+            }
+        }
+
+        public int prevIcon(Activity a) {
+            switch (this) {
+                case TODO: return CANCEL.getIcon(a);
+                case DONE: return TODO.getIcon(a);
+                case CANCEL: return DONE.getIcon(a);
+                default: return 0;
+            }
         }
     }
 

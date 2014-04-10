@@ -29,5 +29,41 @@
             android:dividerHeight="12dp"
             android:padding="12dip"
             android:clipToPadding="false"/>
+
+        <FrameLayout
+            android:id="@+id/guidView"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+            <ImageView
+                android:id="@+id/guidPrevImageView"
+                android:clickable="false"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:background="@drawable/shape_circle"
+                android:layout_gravity="left"
+                android:layout_marginLeft="-50dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:paddingRight="20dp"
+                android:paddingLeft="55dp"
+                android:src="@android:drawable/ic_menu_delete"
+                />
+            <ImageView
+                android:id="@+id/guidNextImageView"
+                android:clickable="false"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:background="@drawable/shape_circle"
+                android:layout_gravity="right"
+                android:layout_marginRight="-50dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:paddingRight="55dp"
+                android:paddingLeft="20dp"
+                android:src="@android:drawable/ic_menu_compass"
+                />
+        </FrameLayout>Layout>
+
     </FrameLayout>
 </RelativeLayout>
