@@ -73,7 +73,7 @@ public class U {
         taskColor("#ff6666");
         taskColor("#ff9966");
         taskColor("#ffcc66");
-        taskColor("#66aa66");
+        taskColor("#00dd66");
         taskColor("#66aaff");
         taskColor("#6666ff");
         taskColor("#aa66ff");
