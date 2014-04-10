@@ -100,7 +100,7 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
 
     private View guidView = null;
     private final float GUID_VIEW_ALPHA = Float.parseFloat("0.5");
-    private final long GUID_VIEW_ANIMATION_TIME = 300;
+    private final long GUID_VIEW_ANIMATION_TIME = 250;
 
 
     public void setGuidView(View guidView) {
@@ -112,7 +112,7 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
         if (guidView != null) {
             guidView.animate()
                     .alpha(f)
-                    .setDuration(GUID_VIEW_ANIMATION_TIME)
+                    .setDuration(GUID_VIEW_ANIMATION_TIME * (f == 0 ? 2 : 1))
                     .setListener(null);
         }
     }
@@ -229,6 +229,7 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
                         mDownView = null;
                     }
                 }
+
                 return false;
             }
 
@@ -236,8 +237,6 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
                 if (mVelocityTracker == null) {
                     break;
                 }
-
-                animateGuidViewAlpha(0);
 
                 if (mDownView != null && mSwiping) {
                     // cancel
@@ -317,11 +316,15 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
             }
 
             case MotionEvent.ACTION_MOVE: {
-                if (mVelocityTracker == null || mPaused) {
+                if (mVelocityTracker == null) {
                     break;
                 }
 
                 animateGuidViewAlpha(GUID_VIEW_ALPHA);
+
+                if (mPaused) {
+                    break;
+                }
 
                 mVelocityTracker.addMovement(motionEvent);
                 float deltaX = motionEvent.getRawX() - mDownX;
