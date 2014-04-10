@@ -152,7 +152,7 @@ public class MainActivity extends BaseActivity implements ActionBar.TabListener 
             case R.id.action_task_undo : {
                 Toast.makeText(
                         this,
-                        R.string.action_task_undo,
+                        undoToastText,
                         Toast.LENGTH_SHORT
                 ).show();
                 undo();
@@ -293,11 +293,13 @@ public class MainActivity extends BaseActivity implements ActionBar.TabListener 
     }
 
     static Task undoTask = null;
+    static String undoToastText = "";
 
     public static void setUndoTask(Task task) {
         undoTask = task == null ? null : task.clone();
         if (mainMenu != null)
             mainMenu.findItem(R.id.action_task_undo).setEnabled(task != null);
+        undoToastText = "Undo.";
     }
 
     public void undo() {
@@ -314,6 +316,7 @@ public class MainActivity extends BaseActivity implements ActionBar.TabListener 
             );
             setUndoTask(nowTask);
             refreshTaskAdapters();
+            undoToastText = "Redo.";
         } finally {
             dbAdapter.close();
         }
