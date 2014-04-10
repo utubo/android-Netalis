@@ -22,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import utb.dip.jp.netalis.U.STATUS;
@@ -100,7 +101,8 @@ public class MainActivity extends BaseActivity implements ActionBar.TabListener 
         */
         IconTextAdapter ad = new IconTextAdapter(this);
         for (int i = 0; i < mSectionsPagerAdapter.getCount(); i++) {
-            ad.add(mSectionsPagerAdapter.getPageTitle(i), mSectionsPagerAdapter.getIcon(i));
+            STATUS s = STATUS.positionOf(i);
+            ad.add(mSectionsPagerAdapter.getPageTitle(i), s.getIcon(this));
         }
         actionBar.setListNavigationCallbacks(ad,
             new ActionBar.OnNavigationListener() {
@@ -241,30 +243,8 @@ public class MainActivity extends BaseActivity implements ActionBar.TabListener 
 
         @Override
         public CharSequence getPageTitle(int position) {
-            Locale l = Locale.getDefault();
-            switch (position + 1) {
-                case 1:
-                    return getString(R.string.title_section1).toUpperCase(l);
-                case 2:
-                    return getString(R.string.title_section2).toUpperCase(l);
-                case 3:
-                    return getString(R.string.title_section3).toUpperCase(l);
-            }
-            return null;
+            return getString(STATUS.positionOf(position).titleId).toUpperCase();
         }
-
-        public int getIcon(int position) {
-            switch (position + 1) {
-                case 1:
-                    return getResources().getIdentifier("@*android:drawable/ic_menu_home", null, getPackageName());
-                case 2:
-                    return getResources().getIdentifier("@*android:drawable/ic_menu_mark", null, getPackageName());
-                case 3:
-                    return android.R.drawable.ic_menu_delete;
-            }
-            return 0;
-        }
-
     }
 
     /**
@@ -422,7 +402,10 @@ public class MainActivity extends BaseActivity implements ActionBar.TabListener 
             if (rootView == null) {
                 return null;
             }
+            // ステータス
             STATUS status = STATUS.valueOf(getArguments().getInt(ARG_STATUS));
+            // インフォ
+            ((TextView) rootView.findViewById(R.id.pageInfo)).setText(status.infoId);
             // リスト
             final TasksAdapter tasksAdapter = getTasksAdapter(status, this.getActivity());
             MyListView listView = (MyListView) rootView.findViewById(R.id.listView);
