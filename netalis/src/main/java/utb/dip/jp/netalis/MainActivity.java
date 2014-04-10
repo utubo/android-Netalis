@@ -314,9 +314,10 @@ public class MainActivity extends BaseActivity implements ActionBar.TabListener 
                 DBAdapter.QUERY_OPTION.WITHOUT_UPDATE_LASTUPDATE,
                 DBAdapter.QUERY_OPTION.FORCE_UPDATE
             );
+            boolean isRedo = "Redo.".equals(undoToastText);
             setUndoTask(nowTask);
+            undoToastText = (isRedo ? "Undo" : "Redo.");
             refreshTaskAdapters();
-            undoToastText = "Redo.";
         } finally {
             dbAdapter.close();
         }
