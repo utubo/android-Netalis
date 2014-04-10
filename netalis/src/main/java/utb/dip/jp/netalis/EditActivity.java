@@ -1,7 +1,6 @@
 package utb.dip.jp.netalis;
 
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,7 +15,7 @@ import android.widget.LinearLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EditActivity extends ActionBarActivity {
+public class EditActivity extends BaseActivity {
 
     private Task task = new Task();
 

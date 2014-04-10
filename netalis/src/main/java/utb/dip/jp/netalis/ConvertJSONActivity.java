@@ -2,7 +2,6 @@ package utb.dip.jp.netalis;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,7 +10,7 @@ import android.widget.EditText;
 import java.text.MessageFormat;
 import java.util.List;
 
-public class ConvertJSONActivity extends ActionBarActivity {
+public class ConvertJSONActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

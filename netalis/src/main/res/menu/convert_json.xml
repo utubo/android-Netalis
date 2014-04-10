@@ -1,8 +1,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="utb.dip.jp.netalis.ConvertJSONActivity" >
     <!--
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     <item android:id="@+id/action_settings"
         android:title="@string/action_settings"
         android:orderInCategory="100"
@@ -12,11 +12,11 @@
         android:title="@string/action_export"
         android:orderInCategory="101"
         android:icon="@android:drawable/ic_menu_upload"
-        app:showAsAction="ifRoom|withText" />
+        android:showAsAction="ifRoom|withText" />
     <item android:id="@+id/action_import"
         android:title="@string/action_import"
         android:orderInCategory="102"
         android:icon="@android:drawable/ic_menu_save"
-        app:showAsAction="ifRoom|withText" />
+        android:showAsAction="ifRoom|withText" />
 
 </menu>

@@ -6,7 +6,13 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/Theme.AppCompat" >
+        android:theme="@android:style/Theme.DeviceDefault.Light.DarkActionBar" >
+        <!--
+            @style/Theme.AppCompat
+            @style/Theme.AppCompat.Light
+            @android:style/Theme.DeviceDefault.Light
+            @android:style/Theme.DeviceDefault.Wallpaper
+        -->
         <activity
             android:name="utb.dip.jp.netalis.MainActivity"
             android:label=""
