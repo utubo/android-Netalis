@@ -15,6 +15,18 @@
         android:icon="@android:drawable/ic_media_previous"
         android:showAsAction="ifRoom" />
 
+    <item android:id="@+id/action_nav_forward"
+        android:title="@string/action_nav_forward"
+        android:orderInCategory="2"
+        android:icon="@android:drawable/ic_media_next"
+        android:showAsAction="ifRoom"/>
+
+    <item android:id="@+id/action_task_add"
+        android:title="@string/action_task_add"
+        android:orderInCategory="11"
+        android:icon="@android:drawable/ic_menu_add"
+        android:showAsAction="ifRoom" />
+
     <item android:id="@+id/action_task_undo"
         android:title="@string/action_task_undo"
         android:orderInCategory="12"
@@ -22,23 +34,11 @@
         android:enabled="false"
         android:showAsAction="ifRoom" />
 
-    <item android:id="@+id/action_task_add"
-        android:title="@string/action_task_add"
-        android:orderInCategory="12"
-        android:icon="@android:drawable/ic_menu_add"
-        android:showAsAction="ifRoom" />
-
     <item android:id="@+id/action_task_random_select"
         android:title="@string/action_task_random_select"
         android:orderInCategory="13"
         android:icon="@android:drawable/ic_menu_help"
         android:showAsAction="ifRoom" />
-
-    <item android:id="@+id/action_nav_forward"
-        android:title="@string/action_nav_forward"
-        android:orderInCategory="21"
-        android:icon="@android:drawable/ic_media_next"
-        android:showAsAction="ifRoom"/>
 
     <item android:id="@+id/action_convert_json"
         android:title="@string/action_convert_json"
