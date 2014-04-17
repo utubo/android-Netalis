@@ -2,8 +2,6 @@ package utb.dip.jp.netalis;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.ShapeDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,14 +23,16 @@ public class TasksAdapter extends ArrayAdapter<Task> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        if (_inflater == null)
+            return null;
         View view = U.nvl(convertView, _inflater.inflate(R.layout.task_list_item, null));
         if (view == null) {
             return null;
         }
         // UI
-        LinearLayout container = (LinearLayout) view.findViewById(R.id.task_list_item_container);
-        TextView titleTextView = (TextView) view.findViewById(R.id.title_textView);
-        TextView subTextView = (TextView) view.findViewById(R.id.sub_textView);
+        LinearLayout container =  U.find(view, R.id.task_list_item_container);
+        TextView titleTextView =  U.find(view, R.id.title_textView);
+        TextView subTextView = U.find(view, R.id.sub_textView);
         // アイテム
         Task task = getItem(position);
         // テキスト

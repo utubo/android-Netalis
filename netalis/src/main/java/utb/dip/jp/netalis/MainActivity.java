@@ -67,14 +67,14 @@ public class MainActivity extends BaseActivity implements ActionBar.TabListener 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final ActionBar actionBar = getActionBar();
+        final ActionBar actionBar = U.notNull(getActionBar());
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.pager);
+        mViewPager = find(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         // When swiping between different sections, select the corresponding
@@ -296,9 +296,9 @@ public class MainActivity extends BaseActivity implements ActionBar.TabListener 
     static String undoToastText = "";
 
     public static void setUndoTask(Task task) {
-        undoTask = task == null ? null : task.clone();
+        undoTask = task == null ? null : task.tryClone();
         if (mainMenu != null)
-            mainMenu.findItem(R.id.action_task_undo).setEnabled(task != null);
+            U.notNull(mainMenu.findItem(R.id.action_task_undo)).setEnabled(task != null);
         undoToastText = "Undo.";
     }
 

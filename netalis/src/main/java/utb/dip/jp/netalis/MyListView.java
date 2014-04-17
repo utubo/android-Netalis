@@ -12,14 +12,17 @@ public class MyListView extends ListView {
         public static int blinkDuration = 1500;
     }
 
+    @SuppressWarnings("unused")
     public MyListView(Context context) {
         super(context);
     }
 
+    @SuppressWarnings("unused")
     public MyListView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 
+    @SuppressWarnings("unused")
     public MyListView(Context context, AttributeSet attrs) {
        super(context, attrs);
     }
@@ -32,7 +35,8 @@ public class MyListView extends ListView {
         if (position < 0 || getAdapter().getCount() < position) {
             return;
         }
-        int offset = (getHeight() - getChildAt(0).getHeight()) / 2;
+        View firstView = getChildAt(0);
+        int offset = (getHeight() - (firstView == null ? 0 : firstView.getHeight())) / 2;
         setSelectionFromTop(position, offset);
     }
 

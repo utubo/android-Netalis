@@ -1,5 +1,6 @@
 package utb.dip.jp.netalis;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -62,13 +63,18 @@ public class ConvertJSONActivity extends BaseActivity {
                         np.setValue(value);
                         return np;
                     }
+                    private Activity a() {
+                        Activity a = getActivity();
+                        if (a == null) throw new RuntimeException("activity is null");
+                        return a;
+                    }
                     @Override
                     public Dialog onCreateDialog(Bundle savedInstanceState) {
-                        final LayoutInflater inflater = getActivity().getLayoutInflater();
+                        final LayoutInflater inflater = a().getLayoutInflater();
                         final View view = inflater.inflate(R.layout.fragment_convert_json_export_dialog, null, false);
                         final NumberPicker offsetNumberPicker = findNumberPicker(owner.offset, owner.maxCount - 1, view, R.id.export_dialog_offset);
                         final NumberPicker countNumberPicker  = findNumberPicker(owner.count, owner.maxCount, view, R.id.export_dialog_count);
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                        AlertDialog.Builder builder = new AlertDialog.Builder(a());
                         // OKクリック時の処理
                         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override
@@ -133,9 +139,9 @@ public class ConvertJSONActivity extends BaseActivity {
      * JSONからインポートする。
      */
     protected void importJson() {
-        EditText jsonEditText = (EditText) findViewById(R.id.json_editText);
+        EditText jsonEditText = find(R.id.json_editText);
         try {
-            List<Task> list = Task.fromJSON(jsonEditText.getText().toString());
+            List<Task> list = Task.fromJSON(String.valueOf(jsonEditText.getText()));
             MainActivity.dbAdapter.open();
             try {
                 int addCount = 0;

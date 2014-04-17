@@ -23,7 +23,7 @@ public class Task implements Cloneable {
     public int priority = 0;
     public String lastupdate = null;
 
-    public Task clone() {
+    public Task tryClone() {
         try {
             return (Task) super.clone();
         } catch (CloneNotSupportedException e) {
@@ -32,7 +32,8 @@ public class Task implements Cloneable {
     }
 
     public String toJSON() {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb;
+        sb = new StringBuilder();
         sb.append("{\n");
         sb.append("\tuuid:"      ).append(U.ezJsonStr(uuid)).append(",\n");
         sb.append("\tlastupdate:").append(U.ezJsonStr(lastupdate)).append(",\n");

@@ -73,6 +73,7 @@ import java.util.List;
  * <p>For a generalized {@link View.OnTouchListener} that makes any view dismissable,
  *
  */
+@SuppressWarnings("ConstantConditions") // 改造する前から「may be produce NullPo」警告が出てたので…
 @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
 public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
     // Cached ViewConfiguration and system-wide constant values
@@ -98,9 +99,8 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
     private View mDownView;
     private boolean mPaused;
 
-    private View guidView = null;
+    private View guidView;
     private final float GUID_VIEW_ALPHA = Float.parseFloat("0.5");
-    private final long GUID_VIEW_ANIMATION_TIME = 250;
 
 
     public void setGuidView(View guidView) {
@@ -110,6 +110,7 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
 
     public void animateGuidViewAlpha(float f) {
         if (guidView != null) {
+            long GUID_VIEW_ANIMATION_TIME = 250;
             guidView.animate()
                     .alpha(f)
                     .setDuration(GUID_VIEW_ANIMATION_TIME * (f == 0 ? 2 : 1))

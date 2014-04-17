@@ -63,12 +63,12 @@ public class IconTextAdapter extends ArrayAdapter<IconTextAdapter.IconText> {
         View view = convertView;
         IconTextView holder;
         if (view == null) {
-            view = LayoutInflater.from(aplContext).inflate(
-                    R.layout.list_item_icon_text, null);
+            view = U.notNull(LayoutInflater.from(aplContext).inflate(
+                    R.layout.list_item_icon_text, null));
 
             holder = new IconTextView();
-            holder.textView = (TextView) view.findViewById(R.id.title);
-            holder.iconView = (ImageView) view.findViewById(R.id.icon);
+            holder.textView = U.find(view, R.id.title);
+            holder.iconView = U.find(view, R.id.icon);
             view.setTag(holder);
         } else {
             holder = (IconTextView) view.getTag();

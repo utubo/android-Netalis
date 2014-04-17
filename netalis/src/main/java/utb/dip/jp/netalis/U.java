@@ -235,4 +235,47 @@ public class U {
             view.setBackgroundDrawable(drawable);
         }
     }
+
+    /**
+     * 「@SuppressWarnings("ConstantConditions")」を書くのが面倒なときに…
+     * @param v value
+     * @param <V> valueのクラス
+     * @return value
+     */
+    public static <V> V notNull(V v) {
+        if (v == null) throw new RuntimeException("is null.");
+        return v;
+    }
+
+    /**
+     * Viewの検索
+     * @param activity 親
+     * @param id 検索するid
+     * @param <V> クラス
+     * @return view。nullの場合やキャスト例外はとりあえずRuntimeException。
+     */
+    @SuppressWarnings("unchecked")
+    public static <V extends View> V find(Activity activity, int id) {
+        try {
+            return (V) notNull(activity.findViewById(id));
+        } catch (ClassCastException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Viewの検索
+     * @param view 親
+     * @param id 検索するid
+     * @param <V> クラス
+     * @return view。nullの場合はとりあえずRuntimeException。
+     */
+    @SuppressWarnings("unchecked")
+    public static <V extends View> V find(View view, int id) {
+        try {
+            return (V) notNull(view.findViewById(id));
+        } catch (ClassCastException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
