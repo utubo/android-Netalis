@@ -29,7 +29,7 @@ public class MyDate extends Date {
 
     public MyDate addDays(int days) {
         MyDate ret = new MyDate();
-        ret.setTime(this.getTime() + days * 24 * 60 * 60 * 10000);
+        ret.setTime(this.getTime() + days * 24 * 60 * 60 * 1000);
         return ret;
     }
 }
