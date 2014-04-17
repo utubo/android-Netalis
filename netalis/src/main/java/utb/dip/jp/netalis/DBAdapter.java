@@ -62,7 +62,7 @@ public class DBAdapter {
                     long id = cursor.getLong(0);
                     db.execSQL(
                         "UPDATE tasks SET uuid = ? WHERE _id = ?",
-                        new String[] {UUID.randomUUID().toString(), String.valueOf(id)}
+                        strings(UUID.randomUUID().toString(), id)
                     );
                 }
             }
@@ -109,10 +109,10 @@ public class DBAdapter {
                 "tasks",
                 "status = ? " +
                 "and lastupdate < ? ",
-                new String[] {
+                strings(
                     STATUS.CANCEL.dbValue,
                     MyDate.now().addDays(- U.Config.EXPIRE_DAYS).format()
-                }
+                )
         );
     }
 
@@ -120,19 +120,39 @@ public class DBAdapter {
 
     /**
      * 全タスクリスト取得
+     * @param offset limit句のオフセット
+     * @param count limit句の件数
      * @return Taskのリスト
      */
-    public List<Task> selectAllTasks() {
+    public List<Task> selectAllTasks(long offset, long count) {
+        if (count < 1) {
+            return new ArrayList<Task>();
+        }
         Cursor cursor = db.query(
                 "tasks",
                 TASKS_COLUMNS,
-                null,
-                null,
+                null, // where
+                null, // binding values
                 null, // group
                 null, // having
-                "status, lastupdate desc" // oder by
+                "status, lastupdate desc", // oder by
+                offset + "," + count // limit
         );
-        return selectTasks(cursor);
+        return selectTasks(cursor, true);
+    }
+
+    /**
+     * 全タスクリストの件数
+     * @return 全タスクリストの件数
+     */
+    public long selectCountAllTasks() {
+        Cursor cursor = db.rawQuery("select count(*) from tasks", null);
+        cursor.moveToLast();
+        try {
+            return cursor.getLong(0);
+        } finally {
+            cursor.close();
+        }
     }
 
     /**
@@ -145,14 +165,14 @@ public class DBAdapter {
                 "tasks",
                 TASKS_COLUMNS,
                 "status=?",
-                new String[]{status.dbValue},
+                strings(status.dbValue),
                 null, // group
                 null, // having
                 // order by
                 (status == STATUS.TODO ? "priority desc, " : "") +
                 "lastupdate desc"
         );
-        return selectTasks(cursor);
+        return selectTasks(cursor, true);
     }
 
     /**
@@ -165,12 +185,12 @@ public class DBAdapter {
                 "tasks",
                 TASKS_COLUMNS,
                 "uuid=?",
-                new String[]{uuid},
+                strings(uuid),
                 null, // group
                 null, // having
                 null // oder by
         );
-        List<Task> list = selectTasks(cursor);
+        List<Task> list = selectTasks(cursor, true);
         return list.size() == 0 ? null : list.get(0);
     }
 
@@ -179,7 +199,7 @@ public class DBAdapter {
      * @param cursor DBカーソル
      * @return Taskのリスト
      */
-    public List<Task> selectTasks(Cursor cursor) {
+    public List<Task> selectTasks(Cursor cursor, boolean autoClose) {
         ArrayList<Task> tasks = new ArrayList<Task>();
         try {
             while (cursor.moveToNext()) {
@@ -194,6 +214,10 @@ public class DBAdapter {
             }
         } catch (Exception e) {
             Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+        } finally {
+            if (autoClose) {
+                cursor.close();
+            }
         }
         return tasks;
     }
@@ -260,7 +284,7 @@ public class DBAdapter {
      * @param values 値
      * @return Stringの配列
      */
-    protected String[] strings(Object... values) {
+    protected static String[] strings(Object... values) {
         List<String> list = new ArrayList<String>();
         for (Object value : values) {
             list.add(String.valueOf(value));
