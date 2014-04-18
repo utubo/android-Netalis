@@ -44,7 +44,7 @@ import java.util.List;
  *
  * <p>After creating the listener, the caller should also call
  * {@link ListView#setOnScrollListener(AbsListView.OnScrollListener)}, passing
- * in the scroll listener returned by {@link #makeScrollListener()}. If a scroll listener is
+ * in the scroll listener returned by {@link #makeScrollListener(AbsListView.OnScrollListener)}. If a scroll listener is
  * already assigned, the caller should still pass scroll changes through to this listener. This will
  * ensure that this {@link SwipeDismissListViewTouchListener} is paused during list view
  * scrolling.</p>
@@ -175,15 +175,18 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
      *
      * @see SwipeDismissListViewTouchListener
      */
-    public AbsListView.OnScrollListener makeScrollListener() {
+    public AbsListView.OnScrollListener makeScrollListener(final AbsListView.OnScrollListener nextListener) {
         return new AbsListView.OnScrollListener() {
+            AbsListView.OnScrollListener next = nextListener;
             @Override
             public void onScrollStateChanged(AbsListView absListView, int scrollState) {
                 setEnabled(scrollState != AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL);
+                next.onScrollStateChanged(absListView, scrollState);
             }
 
             @Override
-            public void onScroll(AbsListView absListView, int i, int i1, int i2) {
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                next.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
             }
         };
     }

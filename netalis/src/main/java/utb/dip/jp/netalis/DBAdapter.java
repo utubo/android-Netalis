@@ -18,6 +18,7 @@ public class DBAdapter {
     static final String DATABASE_NAME = "netalis.db";
     static final int DATABASE_VERSION = 7;
 
+    public static final int LIMIT_COUNT = 200;
     protected final Context context;
     protected DatabaseHelper dbHelper;
     protected SQLiteDatabase db;
@@ -87,7 +88,6 @@ public class DBAdapter {
         dbHelper.close();
     }
 
-
     //
     // App Methods
     //
@@ -106,13 +106,12 @@ public class DBAdapter {
      */
     public int deleteCanceledTask() {
         return db.delete(
-                "tasks",
-                "status = ? " +
-                "and lastupdate < ? ",
-                strings(
-                    STATUS.CANCEL.dbValue,
-                    MyDate.now().addDays(- U.Config.EXPIRE_DAYS).format()
-                )
+            "tasks",
+            "status = ? " +
+            "and lastupdate < ? ",
+            strings(STATUS.CANCEL.dbValue,
+                    MyDate.now().addDays(-U.Config.EXPIRE_DAYS).format()
+            )
         );
     }
 
@@ -156,11 +155,12 @@ public class DBAdapter {
     }
 
     /**
-     * タスクリスト取得
+     * タスクリストをoffsetから#LIMIT_COUNT件取得する。
      * @param status ステータス
+     * @param offset オフセット
      * @return Taskのリスト
      */
-    public List<Task> selectTasks(STATUS status) {
+    public List<Task> selectLimitedTasks(STATUS status, int offset) {
         Cursor cursor = db.query(
                 "tasks",
                 TASKS_COLUMNS,
@@ -170,7 +170,8 @@ public class DBAdapter {
                 null, // having
                 // order by
                 (status == STATUS.TODO ? "priority desc, " : "") +
-                "lastupdate desc"
+                "lastupdate desc",
+                offset +", " + LIMIT_COUNT
         );
         return selectTasks(cursor, true);
     }
@@ -284,7 +285,7 @@ public class DBAdapter {
      * @param values 値
      * @return Stringの配列
      */
-    protected static String[] strings(Object... values) {
+    public static String[] strings(Object... values) {
         List<String> list = new ArrayList<String>();
         for (Object value : values) {
             list.add(String.valueOf(value));

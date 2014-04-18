@@ -19,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -256,16 +257,14 @@ public class MainActivity extends BaseActivity implements ActionBar.TabListener 
             if (tasksAdapter != null) {
                 tasksAdapter.clear();
                 // データ読み込み
-                for (Task task : dbAdapter.selectTasks(status)) {
-                    tasksAdapter.add(task);
-                }
+                tasksAdapter.loadMore(dbAdapter);
                 tasksAdapter.notifyDataSetChanged();
             }
         }
     }
 
     /**
-     * 多数リストの取得
+     * Taskリストの取得
      * @param status ステータス
      * @param context コンテキスト
      * @return TaskAdapter
@@ -273,7 +272,7 @@ public class MainActivity extends BaseActivity implements ActionBar.TabListener 
     public static TasksAdapter getTasksAdapter(STATUS status, Context context) {
         TasksAdapter tasksAdapter = taskArrayAdapters.get(status);
         if (tasksAdapter == null) {
-            tasksAdapter = new TasksAdapter(context);
+            tasksAdapter = new TasksAdapter(context, status);
             dbAdapter.open();
             try {
                 // キャンセルタグを読み込む前に、30日以上立ったものを削除。
@@ -281,9 +280,7 @@ public class MainActivity extends BaseActivity implements ActionBar.TabListener 
                     dbAdapter.deleteCanceledTask();
                 }
                 // データ読み込み
-                for (Task task : dbAdapter.selectTasks(status)) {
-                    tasksAdapter.add(task);
-                }
+                tasksAdapter.loadMore(dbAdapter);
             } finally {
                 dbAdapter.close();
             }
@@ -415,14 +412,36 @@ public class MainActivity extends BaseActivity implements ActionBar.TabListener 
             ((ImageView) rootView.findViewById(R.id.guidPrevImageView)).setImageResource(status.prev().getIcon(getActivity()));
             // リスト
             final TasksAdapter tasksAdapter = getTasksAdapter(status, this.getActivity());
-            MyListView listView = (MyListView) rootView.findViewById(R.id.listView);
+            final MyListView listView = U.find(rootView, R.id.listView);
             listView.setAdapter(tasksAdapter);
             SwipeDismissListViewTouchListener touchListener = new SwipeDismissListViewTouchListener(
                 listView,
                 new TasksDismissCallbacks(status, getActivity())
             );
             listView.setOnTouchListener(touchListener);
-            listView.setOnScrollListener(touchListener.makeScrollListener());
+            listView.setOnScrollListener(touchListener.makeScrollListener(
+                    new AbsListView.OnScrollListener() {
+                        // 下までいったら自動読み込み
+                        @Override
+                        public void onScrollStateChanged(AbsListView view, int scrollState) {
+                        }
+
+                        @Override
+                        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                            if (!tasksAdapter.hasMore)
+                                return;
+                            if (totalItemCount - visibleItemCount == firstVisibleItem) {
+                                dbAdapter.open();
+                                try {
+                                    tasksAdapter.loadMore(dbAdapter);
+                                } finally {
+                                    dbAdapter.close();
+                                }
+                                tasksAdapter.notifyDataSetChanged();
+                            }
+                        }
+                    }
+            ));
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {

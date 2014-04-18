@@ -9,6 +9,8 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.List;
+
 /**
  * タスクリストと画面をつなげるアダプター
  */
@@ -16,9 +18,33 @@ public class TasksAdapter extends ArrayAdapter<Task> {
 
     private LayoutInflater _inflater;
 
-    public TasksAdapter(Context context) {
+    /** U.STATUS列挙体 */
+    public U.STATUS status;
+
+    /** 続きがあるか */
+    public boolean hasMore = true;
+
+    /**
+     * コンストラクタ
+     * @param context 表示するcontext
+     * @param stauts U.STATUS列挙体
+     */
+    public TasksAdapter(Context context, U.STATUS stauts) {
         super(context, R.layout.task_list_item, R.id.title_textView);
         _inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.status = stauts;
+    }
+
+    /**
+     * 続きを読み込む
+     * @param openedDBAdapter Open済みのDBアダプタ
+     */
+    public void loadMore(DBAdapter openedDBAdapter) {
+        List<Task> tasks = openedDBAdapter.selectLimitedTasks(status, getCount());
+        for (Task task : tasks) {
+            add(task);
+        }
+        hasMore = tasks.size() == DBAdapter.LIMIT_COUNT;
     }
 
     /** {@inheritDoc} */
