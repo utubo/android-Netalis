@@ -17,12 +17,14 @@ import android.widget.NumberPicker;
 import java.text.MessageFormat;
 import java.util.List;
 
+/** エクスポート・インポート画面 */
 public class ConvertJSONActivity extends BaseActivity {
 
     int offset = 0;
     int count = 0;
     int maxCount = 0;
 
+    /** {@inheritDoc} */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +38,7 @@ public class ConvertJSONActivity extends BaseActivity {
         count = Math.min(999, maxCount);
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         
@@ -44,6 +47,7 @@ public class ConvertJSONActivity extends BaseActivity {
         return true;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -55,6 +59,7 @@ public class ConvertJSONActivity extends BaseActivity {
         switch (id) {
             case (R.id.action_export) : {
                 final ConvertJSONActivity owner = this;
+                // OFFSET、COUNT入力ダイアログ
                 class MainFragmentDialog extends DialogFragment {
                     private NumberPicker findNumberPicker(int value, int max, View view, int id) {
                         NumberPicker np = (NumberPicker) view.findViewById(id);
@@ -68,6 +73,7 @@ public class ConvertJSONActivity extends BaseActivity {
                         if (a == null) throw new RuntimeException("activity is null");
                         return a;
                     }
+                    /** {@inheritDoc} */
                     @Override
                     public Dialog onCreateDialog(Bundle savedInstanceState) {
                         final LayoutInflater inflater = a().getLayoutInflater();
@@ -101,12 +107,13 @@ public class ConvertJSONActivity extends BaseActivity {
                         return builder.create();
                     }
                 }
-                // Dialogの表示
+                // ダイアログの表示
                 MainFragmentDialog dialog = new MainFragmentDialog();
                 dialog.show(getFragmentManager(), "convert_json_export_dialog");
                 return true;
             }
             case (R.id.action_import) : {
+                // Y/Nダイアログ
                 AlertDialog.Builder alertDlg = new AlertDialog.Builder(this);
                 alertDlg.setTitle(title);
                 alertDlg.setIcon(icon);

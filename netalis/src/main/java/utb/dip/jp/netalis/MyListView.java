@@ -6,6 +6,9 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ListView;
 
+/**
+ * デフォルトのListViewにいろいろ機能追加したもの。
+ */
 public class MyListView extends ListView {
 
     public static class Config {

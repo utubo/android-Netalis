@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import java.util.ArrayList;
 import java.util.List;
 
+/* Task編集画面 */
 public class EditActivity extends BaseActivity {
 
     private Task task = new Task();
@@ -126,6 +127,7 @@ public class EditActivity extends BaseActivity {
         U.applyBackground(editText, R.drawable.shape_task, c.taskColor);
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -133,6 +135,7 @@ public class EditActivity extends BaseActivity {
         return true;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -149,6 +152,7 @@ public class EditActivity extends BaseActivity {
 
     /**
      * 戻るボタン。変更内容を呼び出し元へ返却してアクティビティを閉じる。
+     * {@inheritDoc}
      */
     @Override
     public void onBackPressed() {

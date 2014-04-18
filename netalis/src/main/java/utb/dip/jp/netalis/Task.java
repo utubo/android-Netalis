@@ -10,8 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 日付関連ユーティリティ
- * Created by utb on 14/03/02.
+ * Task構造体
  */
 public class Task implements Cloneable {
     // don't touch this column
@@ -23,6 +22,10 @@ public class Task implements Cloneable {
     public int priority = 0;
     public String lastupdate = null;
 
+    /**
+     * #clone()と同じ。 CloneNotSupportedExceptionをキャッチするのが面倒なので…
+     * @return インスタンスのclone。
+     */
     public Task tryClone() {
         try {
             return (Task) super.clone();
@@ -31,6 +34,10 @@ public class Task implements Cloneable {
         }
     }
 
+    /**
+     * JSONへ変換。
+     * @return JSON文字列
+     */
     public String toJSON() {
         StringBuilder sb;
         sb = new StringBuilder();
@@ -45,6 +52,11 @@ public class Task implements Cloneable {
         return sb.toString();
     }
 
+    /**
+     * TaskのリストをJSONに変換
+     * @param tasks リスト
+     * @return JSON文字列
+     */
     public static String toJSON(List<Task> tasks) {
         StringBuilder sb = new StringBuilder();
         sb.append("{ tasks: [\n");
@@ -58,6 +70,11 @@ public class Task implements Cloneable {
         return sb.toString();
     }
 
+    /**
+     * JSONからTaskのリストを作成。
+     * @param s JSON文字列
+     * @return Taskのリスト
+     */
     public static List<Task> fromJSON(String s) {
         List<Task> list = new ArrayList<Task>();
         if (U.isEmpty(s)) {

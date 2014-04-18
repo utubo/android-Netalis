@@ -27,6 +27,11 @@ public class MyDate extends Date {
         return sdf.format(this);
     }
 
+    /**
+     * x日後のMyDateインスタンスを作成して返す。
+     * @param days 日数
+     * @return x日後の新しいMyDateインスタンス
+     */
     public MyDate addDays(int days) {
         MyDate ret = new MyDate();
         ret.setTime(this.getTime() + days * 24 * 60 * 60 * 1000);

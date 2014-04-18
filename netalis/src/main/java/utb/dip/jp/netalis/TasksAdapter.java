@@ -21,6 +21,7 @@ public class TasksAdapter extends ArrayAdapter<Task> {
         _inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
+    /** {@inheritDoc} */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (_inflater == null)
@@ -48,6 +49,11 @@ public class TasksAdapter extends ArrayAdapter<Task> {
         return view;
     }
 
+    /**
+     * このアダプターに登録されているTaskを検索する。
+     * @param uuid Taskのuuid
+     * @return Task見つからなければnull。
+     */
     public Task find(String uuid) {
         if (U.isEmpty(uuid)) {
             return null;
@@ -62,6 +68,11 @@ public class TasksAdapter extends ArrayAdapter<Task> {
         return null;
     }
 
+    /**
+     * 他Activityへ渡すためのデータをセットする。
+     * @param intent intent
+     * @param task task
+     */
     public static void putExtra(Intent intent, Task task) {
         intent.putExtra("uuid", task.uuid);
         intent.putExtra("task", task.task);
@@ -70,6 +81,11 @@ public class TasksAdapter extends ArrayAdapter<Task> {
         intent.putExtra("priority", task.priority);
     }
 
+    /**
+     * 他Activityから受け取ったデータからTaskを作成する。
+     * @param intent intent
+     * @return task
+     */
     public static Task fromExtra(Intent intent) {
         Task task = new Task();
         task.uuid = intent.getStringExtra("uuid");

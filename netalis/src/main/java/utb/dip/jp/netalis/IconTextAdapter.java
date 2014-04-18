@@ -8,11 +8,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+/**
+ * 左にアイコン右にテキストを表示する、
+ * アクションバーのロケーションメニューのためのAdapter。
+ */
 public class IconTextAdapter extends ArrayAdapter<IconTextAdapter.IconText> {
 
-    /**
-     * アイコンとテキスト
-     */
+    /** テキストとアイコンを保持する構造体 */
     public static class IconText {
         String text;
         int icon;
@@ -28,9 +30,7 @@ public class IconTextAdapter extends ArrayAdapter<IconTextAdapter.IconText> {
         }
     }
 
-    /**
-     * テキストとアイコンのホルダ
-     */
+    /** テキストとアイコンのViewホルダ */
     private class IconTextView {
         TextView textView;
         ImageView iconView;
@@ -46,6 +46,12 @@ public class IconTextAdapter extends ArrayAdapter<IconTextAdapter.IconText> {
         aplContext = context.getApplicationContext();
     }
 
+    /**
+     * アイテムを追加する。
+     * @param charSequence テキスト
+     * @param icon アイコン
+     * @return このインスタンス
+     */
     public IconTextAdapter add(CharSequence charSequence, int icon) {
         add(new IconText(charSequence.toString(), icon));
         return this;

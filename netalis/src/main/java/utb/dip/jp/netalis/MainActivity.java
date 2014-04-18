@@ -411,8 +411,8 @@ public class MainActivity extends BaseActivity implements ActionBar.TabListener 
             // インフォ
             ((TextView) rootView.findViewById(R.id.pageInfo)).setText(status.infoId);
             // ガイド
-            ((ImageView) rootView.findViewById(R.id.guidNextImageView)).setImageResource(status.nextIcon(getActivity()));
-            ((ImageView) rootView.findViewById(R.id.guidPrevImageView)).setImageResource(status.prevIcon(getActivity()));
+            ((ImageView) rootView.findViewById(R.id.guidNextImageView)).setImageResource(status.next().getIcon(getActivity()));
+            ((ImageView) rootView.findViewById(R.id.guidPrevImageView)).setImageResource(status.prev().getIcon(getActivity()));
             // リスト
             final TasksAdapter tasksAdapter = getTasksAdapter(status, this.getActivity());
             MyListView listView = (MyListView) rootView.findViewById(R.id.listView);
@@ -492,7 +492,7 @@ public class MainActivity extends BaseActivity implements ActionBar.TabListener 
                         task.status = STATUS.CANCEL.intValue;
                     }
                     STATUS otherStatus = STATUS.valueOf(task.status);
-                    if (otherStatus != STATUS.OTHER) {
+                    if (otherStatus != STATUS.REMOVE) {
                         // タスクを移動
                         dbAdapter.saveTask(task);
                         TasksAdapter otherAdapter = getTasksAdapter(otherStatus, context);
