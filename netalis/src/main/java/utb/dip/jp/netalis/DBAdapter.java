@@ -101,16 +101,27 @@ public class DBAdapter {
         return db.delete("tasks", "uuid=?", strings(task.uuid));
     }
 
+    /** キャンセルにある30日以上のタスクを削除した日。 */
+    public String lastDeleteCanceledTaskDate = "";
     /**
      * キャンセルにある30日以上のタスクを削除。
      */
     public int deleteCanceledTask() {
+        // なんかいっぱい呼ばれるので1日1回に制限しておく…
+        String today = MyDate.now().format("yyyyMMdd");
+        if (today.equals(lastDeleteCanceledTaskDate)) {
+            return 0;
+        }
+        lastDeleteCanceledTaskDate = today;
+        // 削除処理
+        String expireDate = MyDate.now().addDays(- U.Config.EXPIRE_DAYS).format();
         return db.delete(
             "tasks",
             "status = ? " +
             "and lastupdate < ? ",
-            strings(STATUS.CANCEL.dbValue,
-                    MyDate.now().addDays(-U.Config.EXPIRE_DAYS).format()
+            strings(
+                STATUS.CANCEL.dbValue,
+                expireDate
             )
         );
     }
