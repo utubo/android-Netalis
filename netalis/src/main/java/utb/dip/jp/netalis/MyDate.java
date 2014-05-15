@@ -32,7 +32,7 @@ public class MyDate extends Date {
      * @param days 日数
      * @return x日後の新しいMyDateインスタンス
      */
-    public MyDate addDays(int days) {
+    public MyDate addDays(long days) {
         MyDate ret = new MyDate();
         ret.setTime(this.getTime() + days * 24 * 60 * 60 * 1000);
         return ret;
