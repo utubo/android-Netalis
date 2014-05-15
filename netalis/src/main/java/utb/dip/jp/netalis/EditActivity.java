@@ -24,6 +24,7 @@ public class EditActivity extends BaseActivity {
     private EditText editText = null;
     private LinearLayout priorityButtons = null;
     private LinearLayout colorButtons = null;
+    private boolean isUiInitilized = false;
 
     /**
      * アクティビティ表示
@@ -56,6 +57,11 @@ public class EditActivity extends BaseActivity {
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
+
+        if (isUiInitilized) {
+            return;
+        }
+        isUiInitilized = true;
 
         // 星ボタン
         for (int i = 0; i <= U.Config.PRIORITY_MAX; i ++) {
