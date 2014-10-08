@@ -47,6 +47,60 @@ public class ConvertJSONActivity extends BaseActivity {
         return true;
     }
 
+
+    // OFFSET、COUNT入力ダイアログ
+    public static class MainFragmentDialog extends DialogFragment {
+        public ConvertJSONActivity owner;
+        public int id;
+        public String title;
+        public Drawable icon;
+        private NumberPicker findNumberPicker(int value, int max, View view, int id) {
+            NumberPicker np = (NumberPicker) view.findViewById(id);
+            np.setMinValue(0);
+            np.setMaxValue(Math.max(0, max));
+            np.setValue(value);
+            return np;
+        }
+        private Activity a() {
+            Activity a = getActivity();
+            if (a == null) throw new RuntimeException("activity is null");
+            return a;
+        }
+        /** {@inheritDoc} */
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            final LayoutInflater inflater = a().getLayoutInflater();
+            final View view = inflater.inflate(R.layout.fragment_convert_json_export_dialog, null, false);
+            final NumberPicker offsetNumberPicker = findNumberPicker(owner.offset, owner.maxCount - 1, view, R.id.export_dialog_offset);
+            final NumberPicker countNumberPicker  = findNumberPicker(owner.count, owner.maxCount, view, R.id.export_dialog_count);
+            AlertDialog.Builder builder = new AlertDialog.Builder(a());
+            // OKクリック時の処理
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    EditText jsonEditText = (EditText) owner.findViewById(R.id.json_editText);
+                    MainActivity.dbAdapter.open();
+                    try {
+                        owner.offset = offsetNumberPicker.getValue();
+                        owner.count = countNumberPicker.getValue();
+                        jsonEditText.setText(Task.toJSON(MainActivity.dbAdapter.selectAllTasks(owner.offset, owner.count)));
+                    } catch (Exception e) {
+                        jsonEditText.setText(e.getMessage());
+                    } finally {
+                        MainActivity.dbAdapter.close();
+                    }
+                }
+            });
+            // CANCELクリック時の処理
+            builder.setNegativeButton("Cancel", null);
+            // タイトル
+            builder.setTitle(title);
+            builder.setIcon(icon);
+            builder.setView(view);
+            return builder.create();
+        }
+    }
+
     /** {@inheritDoc} */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -59,56 +113,12 @@ public class ConvertJSONActivity extends BaseActivity {
         switch (id) {
             case (R.id.action_export) : {
                 final ConvertJSONActivity owner = this;
-                // OFFSET、COUNT入力ダイアログ
-                class MainFragmentDialog extends DialogFragment {
-                    private NumberPicker findNumberPicker(int value, int max, View view, int id) {
-                        NumberPicker np = (NumberPicker) view.findViewById(id);
-                        np.setMinValue(0);
-                        np.setMaxValue(Math.max(0, max));
-                        np.setValue(value);
-                        return np;
-                    }
-                    private Activity a() {
-                        Activity a = getActivity();
-                        if (a == null) throw new RuntimeException("activity is null");
-                        return a;
-                    }
-                    /** {@inheritDoc} */
-                    @Override
-                    public Dialog onCreateDialog(Bundle savedInstanceState) {
-                        final LayoutInflater inflater = a().getLayoutInflater();
-                        final View view = inflater.inflate(R.layout.fragment_convert_json_export_dialog, null, false);
-                        final NumberPicker offsetNumberPicker = findNumberPicker(owner.offset, owner.maxCount - 1, view, R.id.export_dialog_offset);
-                        final NumberPicker countNumberPicker  = findNumberPicker(owner.count, owner.maxCount, view, R.id.export_dialog_count);
-                        AlertDialog.Builder builder = new AlertDialog.Builder(a());
-                        // OKクリック時の処理
-                        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                EditText jsonEditText = (EditText) owner.findViewById(R.id.json_editText);
-                                MainActivity.dbAdapter.open();
-                                try {
-                                    owner.offset = offsetNumberPicker.getValue();
-                                    owner.count = countNumberPicker.getValue();
-                                    jsonEditText.setText(Task.toJSON(MainActivity.dbAdapter.selectAllTasks(owner.offset, owner.count)));
-                                } catch (Exception e) {
-                                    jsonEditText.setText(e.getMessage());
-                                } finally {
-                                    MainActivity.dbAdapter.close();
-                                }
-                            }
-                        });
-                        // CANCELクリック時の処理
-                        builder.setNegativeButton("Cancel", null);
-                        // タイトル
-                        builder.setTitle(title);
-                        builder.setIcon(icon);
-                        builder.setView(view);
-                        return builder.create();
-                    }
-                }
                 // ダイアログの表示
                 MainFragmentDialog dialog = new MainFragmentDialog();
+                dialog.owner = owner;
+                dialog.icon = icon;
+                dialog.title = title;
+                dialog.id = id;
                 dialog.show(getFragmentManager(), "convert_json_export_dialog");
                 return true;
             }
