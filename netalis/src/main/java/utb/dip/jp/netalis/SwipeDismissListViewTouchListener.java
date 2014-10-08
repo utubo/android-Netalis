@@ -29,6 +29,7 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.ViewPropertyAnimator;
+import android.view.animation.Interpolator;
 import android.widget.AbsListView;
 import android.widget.ListView;
 
@@ -100,22 +101,42 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
     private boolean mPaused;
 
     private View guidView;
-    private final float GUID_VIEW_ALPHA = Float.parseFloat("0.5");
+    private Boolean isGuidViewAnimateFadein = null;
 
-
+    /** @param guidView 左右のアイコン */
     public void setGuidView(View guidView) {
         this.guidView = guidView;
         this.guidView.setAlpha(0);
     }
 
-    public void animateGuidViewAlpha(float f) {
-        if (guidView != null) {
-            long GUID_VIEW_ANIMATION_TIME = 250;
-            guidView.animate()
-                    .alpha(f)
-                    .setDuration(GUID_VIEW_ANIMATION_TIME * (f == 0 ? 2 : 1))
-                    .setListener(null);
+    /**
+     * 左右のアイコンをフェイドイン/アウトする
+     * @param fadein フェイドインならtrue
+     */
+    public void animateGuidViewAlpha(boolean fadein) {
+        if (guidView == null) {
+            return;
         }
+        if (isGuidViewAnimateFadein != null && isGuidViewAnimateFadein.equals(fadein)) {
+            return;
+        }
+        Interpolator easeOut = new Interpolator() {
+            @Override
+            public float getInterpolation(float t) {
+                t -= 1f;
+                return t * t * t * t * t + 1;
+            }
+        };
+        final float GUID_VIEW_ALPHA = Float.parseFloat("0.5");
+        final long GUID_VIEW_ANIMATION_TIME = 300;
+        guidView.animate()
+                .alpha(fadein ? GUID_VIEW_ALPHA : 0)
+                .setDuration(GUID_VIEW_ANIMATION_TIME)
+                .setInterpolator(easeOut)
+                .scaleX(fadein ? 1 : 2)
+                .setDuration(GUID_VIEW_ANIMATION_TIME)
+                .setInterpolator(easeOut)
+                .setListener(null);
     }
 
     /**
@@ -203,6 +224,8 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
                     return false;
                 }
 
+                animateGuidViewAlpha(true);
+
                 // ensure this is a finger, and set a flag
 
                 // Find the child view that was touched (perform a hit test)
@@ -261,11 +284,12 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
             }
 
             case MotionEvent.ACTION_UP: {
+
+                animateGuidViewAlpha(false);
+
                 if (mVelocityTracker == null) {
                     break;
                 }
-
-                animateGuidViewAlpha(0);
 
                 float deltaX = motionEvent.getRawX() - mDownX;
                 mVelocityTracker.addMovement(motionEvent);
@@ -323,8 +347,6 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
                 if (mVelocityTracker == null) {
                     break;
                 }
-
-                animateGuidViewAlpha(GUID_VIEW_ALPHA);
 
                 if (mPaused) {
                     break;
