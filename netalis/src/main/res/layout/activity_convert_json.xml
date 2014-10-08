@@ -22,8 +22,9 @@
             android:textIsSelectable="true"
             android:textSize="10sp"
             android:scrollbars="vertical"
-            android:textColor="@android:color/primary_text_dark"
-            android:background="@android:color/background_dark"
+            android:padding="2dp"
+            android:textColor="@android:color/primary_text_light"
+            android:background="@android:color/background_light"
             />
     </ScrollView>
 </RelativeLayout>
