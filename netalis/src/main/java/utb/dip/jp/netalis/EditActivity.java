@@ -11,6 +11,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Space;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +24,7 @@ public class EditActivity extends BaseActivity {
 
     private List<ImageView> stars = new ArrayList<ImageView>();
     private EditText editText = null;
+    private TextView timestamp = null;
     private LinearLayout priorityButtons = null;
     private LinearLayout colorButtons = null;
     private boolean isUiInitilized = false;
@@ -37,11 +40,13 @@ public class EditActivity extends BaseActivity {
         Intent intent = getIntent();
         task = TasksAdapter.fromExtra(intent);
         editText = (EditText) findViewById(R.id.editText);
+        timestamp = (TextView) findViewById(R.id.task_edit_timestamp);
         priorityButtons = (LinearLayout) findViewById(R.id.priority_buttons_linerLayout);
         colorButtons = (LinearLayout) findViewById(R.id.color_buttons_linerLayout);
 
         editText.setText(task.task);
         editText.setSelection(task.task.length()); // カーソルを末尾に移動
+        timestamp.setText(task.lastupdate);
         setupTaskColor(task.color);
 
         if (task.uuid == null) {
@@ -89,8 +94,8 @@ public class EditActivity extends BaseActivity {
             }
             Button button = new Button(this, null, R.style.ColorButtonStyle);
             U.applyBackground(button, R.drawable.shape_circle, c.taskColor);
-            button.setWidth(colorButtons.getHeight());
-            button.setHeight(colorButtons.getHeight());
+            button.setWidth(colorButtons.getHeight() * 9 / 10);
+            button.setHeight(colorButtons.getHeight() * 9 / 10);
             button.setTag(c.colorDBValue);
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -99,6 +104,9 @@ public class EditActivity extends BaseActivity {
                 }
             });
             colorButtons.addView(button);
+            Space space = new Space(this);
+            space.setMinimumWidth(colorButtons.getHeight() / 10);
+            colorButtons.addView(space);
         }
     }
 
@@ -130,6 +138,7 @@ public class EditActivity extends BaseActivity {
         task.color = color;
         U.TaskColor c = U.taskColor(color);
         editText.setTextColor(c.textColor);
+        timestamp.setTextColor(c.textColor);
         U.applyBackground(editText, R.drawable.shape_task, c.taskColor);
     }
 
