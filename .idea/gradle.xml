@@ -7,13 +7,12 @@
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="modules">
           <set>
-            <option value="X:\user\develop\android\Netalis" />
-            <option value="X:\user\develop\android\Netalis\netalis" />
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/netalis" />
           </set>
         </option>
       </GradleProjectSettings>
     </option>
-    <option name="serviceDirectoryPath" value="$PROJECT_DIR$/../../.gradle" />
   </component>
 </project>
 
