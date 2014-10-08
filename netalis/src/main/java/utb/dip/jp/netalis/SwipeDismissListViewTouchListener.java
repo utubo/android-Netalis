@@ -124,11 +124,11 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
             @Override
             public float getInterpolation(float t) {
                 t -= 1f;
-                return t * t * t * t * t + 1;
+                return t * t * t + 1;
             }
         };
         final float GUID_VIEW_ALPHA = Float.parseFloat("0.5");
-        final long GUID_VIEW_ANIMATION_TIME = 300;
+        final long GUID_VIEW_ANIMATION_TIME = 500;
         guidView.animate()
                 .alpha(fadein ? GUID_VIEW_ALPHA : 0)
                 .setDuration(GUID_VIEW_ANIMATION_TIME)
@@ -224,8 +224,6 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
                     return false;
                 }
 
-                animateGuidViewAlpha(true);
-
                 // ensure this is a finger, and set a flag
 
                 // Find the child view that was touched (perform a hit test)
@@ -246,6 +244,7 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
                 }
 
                 if (mDownView != null) {
+                    animateGuidViewAlpha(true);
                     mDownX = motionEvent.getRawX();
                     mDownY = motionEvent.getRawY();
                     mDownPosition = mListView.getPositionForView(mDownView);
