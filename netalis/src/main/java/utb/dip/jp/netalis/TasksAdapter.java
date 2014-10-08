@@ -105,6 +105,7 @@ public class TasksAdapter extends ArrayAdapter<Task> {
         intent.putExtra("status", task.status);
         intent.putExtra("color", task.color);
         intent.putExtra("priority", task.priority);
+        intent.putExtra("lastupdate", task.lastupdate);
     }
 
     /**
@@ -119,6 +120,7 @@ public class TasksAdapter extends ArrayAdapter<Task> {
         task.status = intent.getIntExtra("status", U.STATUS.TODO.intValue);
         task.color = intent.getStringExtra("color");
         task.priority = intent.getIntExtra("priority", 0);
+        task.lastupdate = intent.getStringExtra("lastupdate");
         return task;
     }
 
