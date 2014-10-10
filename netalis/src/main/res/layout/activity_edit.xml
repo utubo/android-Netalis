@@ -27,6 +27,7 @@
                 android:ems="10"
                 android:id="@+id/editText"
                 android:text="New Task"
+                android:textCursorDrawable="@null"
                 android:padding="6dp"
                 android:gravity="top" />
             <TextView
