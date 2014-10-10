@@ -185,5 +185,8 @@ public class EditActivity extends BaseActivity {
 
         // アクティビティを終了させる
         finish();
+
+        // アニメーション
+        overridePendingTransition(R.anim.activity_enter, R.anim.activity_exit);
     }
 }

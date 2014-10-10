@@ -169,6 +169,7 @@ public class MainActivity extends BaseActivity implements ActionBar.TabListener 
                 Task task = new Task();
                 TasksAdapter.putExtra(intent, task);
                 startActivityForResult(intent, EDIT_ACTIVITY);
+                overridePendingTransition(R.anim.activity_enter, R.anim.activity_exit);
                 return true;
             }
             case R.id.action_task_random_select : {
@@ -448,6 +449,7 @@ public class MainActivity extends BaseActivity implements ActionBar.TabListener 
                     Intent intent = new Intent(getActivity(), EditActivity.class );
                     TasksAdapter.putExtra(intent, tasksAdapter.getItem(i));
                     getActivity().startActivityForResult(intent, EDIT_ACTIVITY);
+                    getActivity().overridePendingTransition(R.anim.activity_enter, R.anim.activity_exit);
                 }
             });
             if (status == STATUS.TODO) {

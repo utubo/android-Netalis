@@ -23,13 +23,14 @@ import android.annotation.TargetApi;
 import android.graphics.Rect;
 import android.os.Build;
 import android.os.SystemClock;
+import android.support.annotation.NonNull;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.ViewPropertyAnimator;
-import android.view.animation.Interpolator;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.AbsListView;
 import android.widget.ListView;
 
@@ -120,22 +121,13 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
         if (isGuidViewAnimateFadein != null && isGuidViewAnimateFadein.equals(fadein)) {
             return;
         }
-        Interpolator easeOut = new Interpolator() {
-            @Override
-            public float getInterpolation(float t) {
-                t -= 1f;
-                return t * t * t + 1;
-            }
-        };
         final float GUID_VIEW_ALPHA = Float.parseFloat("0.5");
         final long GUID_VIEW_ANIMATION_TIME = 500;
         guidView.animate()
+                .setDuration(GUID_VIEW_ANIMATION_TIME)
+                .setInterpolator(new AccelerateDecelerateInterpolator())
                 .alpha(fadein ? GUID_VIEW_ALPHA : 0)
-                .setDuration(GUID_VIEW_ANIMATION_TIME)
-                .setInterpolator(easeOut)
                 .scaleX(fadein ? 1 : 2)
-                .setDuration(GUID_VIEW_ANIMATION_TIME)
-                .setInterpolator(easeOut)
                 .setListener(null);
     }
 
@@ -390,7 +382,7 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
         }
 
         @Override
-        public int compareTo(PendingDismissData other) {
+        public int compareTo(@NonNull PendingDismissData other) {
             // Sort by descending position
             return other.position - position;
         }
