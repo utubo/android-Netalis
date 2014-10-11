@@ -35,10 +35,21 @@ public class Task implements Cloneable {
     }
 
     /**
+     * 比較元から変更があったか返す
+     * @param from 比較元
+     * @return 変更があればtrue
+     */
+    public boolean isModified(Task from) {
+        return !U.eq(from.task, task) ||
+                !U.eq(from.color, color) ||
+                !U.eq(from.priority, priority);
+    }
+
+    /**
      * JSONへ変換。
      * @return JSON文字列
      */
-    public String toJSON() {
+    private String toJSON() {
         StringBuilder sb;
         sb = new StringBuilder();
         sb.append("{\n");

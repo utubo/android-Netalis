@@ -334,7 +334,6 @@ public class MainActivity extends BaseActivity implements ActionBar.TabListener 
             if( resultCode == RESULT_OK ){
                 // 返却されてきたintentから値を取り出す
                 Task newTask = TasksAdapter.fromExtra(intent);
-                Task task;
                 TasksAdapter a = getTasksAdapter(STATUS.valueOf(newTask.status), this);
                 if (newTask.uuid == null) {
                     if (U.isEmpty(newTask.task)) {
@@ -342,35 +341,27 @@ public class MainActivity extends BaseActivity implements ActionBar.TabListener 
                     }
                     // 新規追加
                     setUndoTask(null);
-                    task = newTask;
-                    task.status = STATUS.TODO.intValue;
+                    newTask.status = STATUS.TODO.intValue;
                 } else {
-                    task = a.find(newTask.uuid);
-                    // 更新なし
-                    if (U.eq(newTask.task, task.task) &&
-                        U.eq(newTask.color, task.color) &&
-                        U.eq(newTask.priority, task.priority)
-                    ) {
+                    Task oldTask = a.find(newTask.uuid);
+                    if (!newTask.isModified(oldTask)) {
+                        // 更新なしなら即return
                         return;
                     }
-                    setUndoTask(task);
-                    a.remove(task);
+                    setUndoTask(oldTask);
+                    a.remove(oldTask);
                 }
-                task.task = newTask.task;
-                task.status = newTask.status;
-                task.color = newTask.color;
-                task.priority = newTask.priority;
-                task.lastupdate = MyDate.now().format();
+                newTask.lastupdate = MyDate.now().format();
                 dbAdapter.open();
-                dbAdapter.saveTask(task);
+                dbAdapter.saveTask(newTask);
                 dbAdapter.close();
                 int i;
                 for (i = 0; i < a.getCount(); i ++) {
-                    if (a.getItem(i).priority <= task.priority) {
+                    if (a.getItem(i).priority <= newTask.priority) {
                         break;
                     }
                 }
-                a.insert(task, i);
+                a.insert(newTask, i);
                 a.notifyDataSetChanged();
             }
         }
