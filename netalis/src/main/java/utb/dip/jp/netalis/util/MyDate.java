@@ -1,4 +1,4 @@
-package utb.dip.jp.netalis;
+package utb.dip.jp.netalis.util;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

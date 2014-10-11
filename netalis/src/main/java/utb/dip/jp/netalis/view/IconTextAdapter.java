@@ -1,4 +1,4 @@
-package utb.dip.jp.netalis;
+package utb.dip.jp.netalis.view;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,6 +7,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import utb.dip.jp.netalis.R;
+import utb.dip.jp.netalis.util.U;
 
 /**
  * 左にアイコン右にテキストを表示する、

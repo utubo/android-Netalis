@@ -1,4 +1,4 @@
-package utb.dip.jp.netalis;
+package utb.dip.jp.netalis.view;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;

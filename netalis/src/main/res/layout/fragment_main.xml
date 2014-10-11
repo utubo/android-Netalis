@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="0dp"
-    tools:context="utb.dip.jp.netalis.MainActivity$PlaceholderFragment"
+    tools:context="utb.dip.jp.netalis.activities.MainActivity$PlaceholderFragment"
 >
     <FrameLayout
         android:layout_width="fill_parent"
@@ -19,7 +19,7 @@
             android:alpha=".5"
             android:text="INFO"/>
 
-        <utb.dip.jp.netalis.MyListView
+        <utb.dip.jp.netalis.view.MyListView
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:id="@+id/listView"

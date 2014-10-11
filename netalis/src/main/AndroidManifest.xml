@@ -14,7 +14,7 @@
             @android:style/Theme.DeviceDefault.Wallpaper
         -->
         <activity
-            android:name="utb.dip.jp.netalis.MainActivity"
+            android:name=".activities.MainActivity"
             android:label=""
             android:uiOptions="splitActionBarWhenNarrow" >
             <intent-filter>
@@ -23,11 +23,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="utb.dip.jp.netalis.EditActivity"
+            android:name=".activities.EditActivity"
             android:label="@string/title_activity_edit" >
         </activity>
         <activity
-            android:name="utb.dip.jp.netalis.ConvertJSONActivity"
+            android:name=".activities.ConvertJSONActivity"
             android:label="@string/title_activity_convert_json" >
         </activity>
     </application>

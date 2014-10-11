@@ -1,14 +1,11 @@
-package utb.dip.jp.netalis;
+package utb.dip.jp.netalis.util;
 
 import android.app.Activity;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.view.View;
 
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
@@ -18,134 +15,6 @@ import java.util.UUID;
 public class U {
 
     public static Random rnd = new Random();
-
-    public static class Config {
-        public static int EXPIRE_DAYS = 30;
-        public static int PRIORITY_MAX = 5;
-    }
-
-    /** タスクの色を表す構造体 */
-    public static class TaskColor {
-        public String colorDBValue;
-        public int taskColor;
-        public int textColor;
-        public boolean isParseError = false;
-        public TaskColor(String color) {
-            this.colorDBValue = color;
-            try {
-                this.taskColor = Color.parseColor(color);
-            } catch (Exception e) {
-                isParseError = true;
-                this.taskColor = Color.parseColor("#cccccc");
-            }
-            this.textColor = Color.parseColor(isBrightColor(taskColor) ? "#555555" : "#ffffff");
-        }
-    }
-
-    /**
-     * 明るい色ならtrue。
-     * @param color 判定する色
-     * @return 明るい色ならtrue。
-     */
-    private static boolean isBrightColor(int color) {
-        return Color.blue(color) + Color.green(color) + Color.red(color) > 12 * 16 * 3;
-    }
-
-    /** 色のキャッシュ */
-    public static Map<String, TaskColor> taskColorHashMap = new LinkedHashMap<String, TaskColor>();
-
-    /**
-     * タスクの色を返す。
-     * @param color 色を表す文字列（#rrggbb)
-     * @return TaskColorクラス
-     */
-    public static TaskColor taskColor(String color) {
-        TaskColor c = taskColorHashMap.get(color);
-        if (c == null) {
-            c = new TaskColor(color);
-            taskColorHashMap.put(color, c);
-        }
-        return c;
-    }
-
-    /** デフォルトタスクの色 */
-    static {
-        taskColor("#cccccc");
-        taskColor("#ff8888");
-        taskColor("#ff6666");
-        taskColor("#ff9966");
-        taskColor("#ffcc66");
-        taskColor("#00dd66");
-        taskColor("#66aaff");
-        taskColor("#6666ff");
-        taskColor("#aa66ff");
-        taskColor("#333333");
-    }
-
-    /** STATUS列挙体 */
-    public static enum STATUS {
-        TODO(   1, R.string.title_section1, R.string.info_section1),
-        DONE(   2, R.string.title_section2,  R.string.info_section2),
-        CANCEL( 3, R.string.title_section3,  R.string.info_section3),
-        REMOVE(  0, R.string.empty_string,   R.string.empty_string);
-        public final int intValue;
-        public final int position;
-        public final int titleId;
-        public final int infoId;
-        public final String dbValue;
-        STATUS(int i, int title, int info) {
-            intValue = i;
-            position = i - 1;
-            titleId = title;
-            infoId = info;
-            dbValue = String.valueOf(i);
-        }
-        public static STATUS valueOf(int i) {
-            for (STATUS s : STATUS.values()) {
-                if (s.intValue == i) {
-                    return s;
-                }
-            }
-            return STATUS.REMOVE;
-        }
-
-        public static STATUS positionOf(int position) {
-            for (STATUS s : STATUS.values()) {
-                if (s.position == position) {
-                    return s;
-                }
-            }
-            return STATUS.REMOVE;
-        }
-
-        public int getIcon(Activity a) {
-            switch (this) {
-                case TODO: return a.getResources().getIdentifier("@*android:drawable/ic_menu_home", null, a.getPackageName());
-                case DONE: return a.getResources().getIdentifier("@*android:drawable/ic_menu_mark", null, a.getPackageName());
-                case CANCEL: return android.R.drawable.ic_menu_delete;
-                case REMOVE: return android.R.drawable.ic_delete;
-                default: return 0;
-            }
-        }
-
-        public STATUS next() {
-            switch (this) {
-                case TODO: return DONE;
-                case DONE: return CANCEL;
-                case CANCEL: return REMOVE;
-                default: return TODO;
-            }
-        }
-
-        public STATUS prev() {
-            switch (this) {
-                case TODO: return CANCEL;
-                case DONE: return TODO;
-                case CANCEL: return DONE;
-                default: return TODO;
-            }
-        }
-    }
 
     /**
      * valueがnullならotherwiseを返す。

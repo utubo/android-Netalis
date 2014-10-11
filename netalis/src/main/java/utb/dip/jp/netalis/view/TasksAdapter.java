@@ -1,4 +1,4 @@
-package utb.dip.jp.netalis;
+package utb.dip.jp.netalis.view;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +12,13 @@ import android.widget.TextView;
 import java.util.Arrays;
 import java.util.List;
 
+import utb.dip.jp.netalis.R;
+import utb.dip.jp.netalis.model.Task;
+import utb.dip.jp.netalis.model.TaskStatus;
+import utb.dip.jp.netalis.util.DBAdapter;
+import utb.dip.jp.netalis.model.TaskColor;
+import utb.dip.jp.netalis.util.U;
+
 /**
  * タスクリストと画面をつなげるアダプター
  */
@@ -20,7 +27,7 @@ public class TasksAdapter extends ArrayAdapter<Task> {
     private LayoutInflater _inflater;
 
     /** U.STATUS列挙体 */
-    public U.STATUS status;
+    public TaskStatus status;
 
     /** 続きがあるか */
     public boolean hasMore = true;
@@ -30,7 +37,7 @@ public class TasksAdapter extends ArrayAdapter<Task> {
      * @param context 表示するcontext
      * @param stauts U.STATUS列挙体
      */
-    public TasksAdapter(Context context, U.STATUS stauts) {
+    public TasksAdapter(Context context, TaskStatus stauts) {
         super(context, R.layout.task_list_item, R.id.title_textView);
         _inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.status = stauts;
@@ -68,7 +75,7 @@ public class TasksAdapter extends ArrayAdapter<Task> {
         titleTextView.setText(lines[0]);
         subTextView.setText(1 < lines.length ? lines[1] : "");
         // 色
-        U.TaskColor c = U.taskColor(task.color);
+        TaskColor c = TaskColor.taskColor(task.color);
         U.applyBackground(container, R.drawable.shape_task, c.taskColor);
         titleTextView.setTextColor(c.textColor);
         subTextView.setTextColor(c.textColor);

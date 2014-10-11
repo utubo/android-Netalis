@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package utb.dip.jp.netalis;
+package utb.dip.jp.netalis.view;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
