@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -100,12 +101,7 @@ public class TasksAdapter extends ArrayAdapter<Task> {
      * @param task task
      */
     public static void putExtra(Intent intent, Task task) {
-        intent.putExtra("uuid", task.uuid);
-        intent.putExtra("task", task.task);
-        intent.putExtra("status", task.status);
-        intent.putExtra("color", task.color);
-        intent.putExtra("priority", task.priority);
-        intent.putExtra("lastupdate", task.lastupdate);
+        intent.putExtra("task", Task.toJSON(Arrays.asList(task)));
     }
 
     /**
@@ -114,14 +110,7 @@ public class TasksAdapter extends ArrayAdapter<Task> {
      * @return task
      */
     public static Task fromExtra(Intent intent) {
-        Task task = new Task();
-        task.uuid = intent.getStringExtra("uuid");
-        task.task = intent.getStringExtra("task");
-        task.status = intent.getIntExtra("status", U.STATUS.TODO.intValue);
-        task.color = intent.getStringExtra("color");
-        task.priority = intent.getIntExtra("priority", 0);
-        task.lastupdate = intent.getStringExtra("lastupdate");
-        return task;
+        return U.find(Task.fromJSON(intent.getStringExtra("task")), 0);
     }
 
 }

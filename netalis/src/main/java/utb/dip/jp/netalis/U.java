@@ -7,6 +7,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.view.View;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
@@ -220,6 +221,17 @@ public class U {
     }
 
     /**
+     * List#get(int)のIndexOutOfBounds出ない版
+     * @param list list
+     * @param index index
+     * @param <T> any type
+     * @return list.get(index)。indexが範囲外ならnull。
+     */
+    public static <T> T find(List<T> list, int index) {
+        return list.size() <= index ? null : list.get(index);
+    }
+
+    /**
      * バックグラウンドの色を指定して形をあてがう
      * @param view 適用するView
      * @param id 形
@@ -231,10 +243,11 @@ public class U {
             return;
         }
         GradientDrawable drawable = (GradientDrawable) res.getDrawable(id);
-        if (drawable != null) {
-            drawable.setColor(color);
-            view.setBackgroundDrawable(drawable);
+        if (drawable == null) {
+            return;
         }
+        drawable.setColor(color);
+        view.setBackgroundDrawable(drawable);
     }
 
     /**
@@ -279,4 +292,5 @@ public class U {
             throw new RuntimeException(e);
         }
     }
+
 }
