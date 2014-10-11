@@ -50,13 +50,15 @@
             android:layout_height="30dp">
         </LinearLayout>
         <HorizontalScrollView
+            android:id="@+id/color_buttons_container"
             android:layout_gravity="bottom"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content">
             <LinearLayout
                 android:id="@+id/color_buttons_linerLayout"
                 android:orientation="horizontal"
-                android:layout_width="fill_parent"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
                 android:layout_height="30dp">
             </LinearLayout>
         </HorizontalScrollView>

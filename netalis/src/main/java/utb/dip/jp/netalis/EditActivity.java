@@ -2,6 +2,7 @@ package utb.dip.jp.netalis;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -9,6 +10,8 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Space;
@@ -27,6 +30,7 @@ public class EditActivity extends BaseActivity {
     private TextView timestamp = null;
     private LinearLayout priorityButtons = null;
     private LinearLayout colorButtons = null;
+    private HorizontalScrollView colorButtonsContainer = null;
     private boolean isUiInitilized = false;
 
     /**
@@ -43,6 +47,7 @@ public class EditActivity extends BaseActivity {
         timestamp = (TextView) findViewById(R.id.task_edit_timestamp);
         priorityButtons = (LinearLayout) findViewById(R.id.priority_buttons_linerLayout);
         colorButtons = (LinearLayout) findViewById(R.id.color_buttons_linerLayout);
+        colorButtonsContainer = (HorizontalScrollView) findViewById(R.id.color_buttons_container);
 
         editText.setText(task.task);
         editText.setSelection(task.task.length()); // カーソルを末尾に移動
@@ -88,9 +93,15 @@ public class EditActivity extends BaseActivity {
         }
 
         // 色選択ボタン
+        int count = 0;
         for (U.TaskColor c : U.taskColorHashMap.values()) {
             if (c.isParseError) {
                 continue;
+            }
+            if (count != 0) {
+                Space space = new Space(this);
+                space.setMinimumWidth(colorButtons.getHeight() / 10);
+                colorButtons.addView(space);
             }
             Button button = new Button(this, null, R.style.ColorButtonStyle);
             U.applyBackground(button, R.drawable.shape_circle, c.taskColor);
@@ -104,9 +115,10 @@ public class EditActivity extends BaseActivity {
                 }
             });
             colorButtons.addView(button);
-            Space space = new Space(this);
-            space.setMinimumWidth(colorButtons.getHeight() / 10);
-            colorButtons.addView(space);
+            count ++;
+        }
+        if (colorButtonsContainer.getWidth() < colorButtons.getHeight() * count) {
+            ((FrameLayout.LayoutParams) colorButtons.getLayoutParams()).gravity = Gravity.LEFT;
         }
     }
 
