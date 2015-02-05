@@ -106,7 +106,7 @@ public class U {
      * @param id 形
      * @param color 色
      */
-    public static void applyBackground(View view, int id, int color) {
+    public static void applyBackground(View view, int id, int color, int alpha) {
         Resources res = view.getResources();
         if (res == null) {
             return;
@@ -116,6 +116,7 @@ public class U {
             return;
         }
         drawable.setColor(color);
+        drawable.setAlpha(alpha);
         view.setBackgroundDrawable(drawable);
     }
 

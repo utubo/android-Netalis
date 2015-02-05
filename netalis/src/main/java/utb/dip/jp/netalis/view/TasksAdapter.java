@@ -15,6 +15,7 @@ import java.util.List;
 import utb.dip.jp.netalis.R;
 import utb.dip.jp.netalis.model.Task;
 import utb.dip.jp.netalis.model.TaskStatus;
+import utb.dip.jp.netalis.util.Config;
 import utb.dip.jp.netalis.util.DBAdapter;
 import utb.dip.jp.netalis.model.TaskColor;
 import utb.dip.jp.netalis.util.U;
@@ -76,7 +77,7 @@ public class TasksAdapter extends ArrayAdapter<Task> {
         subTextView.setText(1 < lines.length ? lines[1] : "");
         // 色
         TaskColor c = TaskColor.taskColor(task.color);
-        U.applyBackground(container, R.drawable.shape_task, c.taskColor);
+        U.applyBackground(container, R.drawable.shape_task, c.taskColor, Config.TASK_ALPHA);
         titleTextView.setTextColor(c.textColor);
         subTextView.setTextColor(c.textColor);
 

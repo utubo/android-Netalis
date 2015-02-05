@@ -111,7 +111,7 @@ public class EditActivity extends BaseActivity {
                 colorButtons.addView(space);
             }
             Button button = new Button(this, null, R.style.ColorButtonStyle);
-            U.applyBackground(button, R.drawable.shape_circle, c.taskColor);
+            U.applyBackground(button, R.drawable.shape_circle, c.taskColor, Config.TASK_ALPHA);
             button.setWidth(colorButtons.getHeight() * 9 / 10);
             button.setHeight(colorButtons.getHeight() * 9 / 10);
             button.setTag(c.colorDBValue);
@@ -158,7 +158,7 @@ public class EditActivity extends BaseActivity {
         TaskColor c = TaskColor.taskColor(color);
         editText.setTextColor(c.textColor);
         timestamp.setTextColor(c.textColor);
-        U.applyBackground(editText, R.drawable.shape_task, c.taskColor);
+        U.applyBackground(editText, R.drawable.shape_task, c.taskColor, Config.TASK_ALPHA);
     }
 
     /** {@inheritDoc} */

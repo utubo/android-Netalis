@@ -6,4 +6,5 @@ package utb.dip.jp.netalis.util;
 public class Config {
     public static int EXPIRE_DAYS = 30;
     public static int PRIORITY_MAX = 5;
+    public static int TASK_ALPHA = 200;
 }
